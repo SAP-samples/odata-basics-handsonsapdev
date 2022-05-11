@@ -1,0 +1,63 @@
+{
+  "_version": "1.21.0",
+  "sap.app": {
+    "ach" : "CA-UI5-COR",
+    "id": "handsonsapdev",
+    "type": "application",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "Northwind Data",
+    "description": "Hands-on SAP Dev",
+    "dataSources": {
+      "default": {
+        "uri": "/northwind-model/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "handsonsapdev.App",
+      "type": "XML",
+      "async": true,
+      "id": "appView"
+    },
+    "dependencies": {
+      "minUI5Version": "1.96.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "": {
+        "dataSource": "default",
+        "preload": true,
+        "settings": {
+          "groupId": "$direct",
+          "autoExpandSelect": true,
+          "earlyRequests": true,
+          "operationMode": "Server",
+          "synchronizationMode": "None"
+        }
+      }
+    }
+  }
+}

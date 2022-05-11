@@ -1,0 +1,9 @@
+<mvc:View displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+  <App>
+    <Page title="Northwind Data">
+      <List items="{path: '/Products'}" growing="true">
+        <StandardListItem title="{ProductName}" description="{QuantityPerUnit}" />
+      </List>
+    </Page>
+  </App>
+</mvc:View>
