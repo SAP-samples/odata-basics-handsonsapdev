@@ -1,7 +1,7 @@
 <mvc:View displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
   <App>
     <Page title="Northwind Data">
-      <List items="{path: '/Products'}" growing="true">
+      <List items="{path: '/Products', parameters: { $filter: 'Discontinued eq true' } }" growing="true">
         <ObjectListItem title="{ProductName}" markFlagged="true">
           <ObjectAttribute text="{QuantityPerUnit}" />
           <markers>
