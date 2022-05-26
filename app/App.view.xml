@@ -2,7 +2,12 @@
   <App>
     <Page title="Northwind Data">
       <List items="{path: '/Products'}" growing="true">
-        <StandardListItem title="{ProductName}" description="{QuantityPerUnit}" />
+        <ObjectListItem title="{ProductName}" markFlagged="true">
+          <ObjectAttribute text="{QuantityPerUnit}" />
+          <markers>
+            <ObjectMarker type="Flagged" visible="{Discontinued}" />
+          </markers>
+        </ObjectListItem>
       </List>
     </Page>
   </App>
