@@ -34,5 +34,4 @@ entity Categories {
       CategoryName: String;
       Description: String;
       Products: Association to many Products on Products.Category = $self;
-
 }
