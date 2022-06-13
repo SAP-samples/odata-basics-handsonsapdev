@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+declare servicefile="${1:-$(find srv/ -name '*.cds' | head -1)}"
+cds compile --to edmx "$servicefile" | bat --plain
