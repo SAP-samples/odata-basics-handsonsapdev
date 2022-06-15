@@ -7,7 +7,7 @@
 ### Logical operators
 
 **Products that are discontinued**
-<br>[Products?$filter=Discontinued eq true](http://localhost:8000/northwind-model/Products?$filter=Discontinued eq true)
+<br>[Products?\$filter=Discontinued eq true](http://localhost:8000/northwind-model/Products?$filter=Discontinued%20eq%20true)
 <br>Basic, single filter on collection with logical operator `eq`
 
 **Products that are discontinued but there is still stock**
