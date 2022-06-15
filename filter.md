@@ -2,28 +2,38 @@
 
 <!-- Auto build the HTML from this by running bin/autorebuildfilter -->
 
+## Notes
+
+These examples use various OData services:
+
+* [Northwind V4](https://services.odata.org/v4/northwind/northwind.svc/)
+* [TripPin](https://www.odata.org/blog/trippin-new-odata-v4-sample-service/)
+* [The CAP based V4 OData service in this repository](http://localhost:4004/northwind-model/)
+
+To run the CAP based V4 OData service in this repository, use `cds run`. The default port 4004 is used. 
+
 ## Basic usage
 
 ### Logical operators
 
 **Products that are discontinued**
-<br>[Products?\$filter=Discontinued eq true](http://localhost:8000/northwind-model/Products?$filter=Discontinued%20eq%20true)
+<br>[Products?\$filter=Discontinued eq true](http://localhost:4004/northwind-model/Products?$filter=Discontinued%20eq%20true)
 <br>Basic, single filter on collection with logical operator `eq`
 
 **Products that are discontinued but there is still stock**
-<br>[Products?$filter=Discontinued eq true and UnitsInStock gt 0](http://localhost:8000/northwind-model/Products?$filter=Discontinued%20eq%20true%20and%20UnitsInStock%20gt%200)
+<br>[Products?$filter=Discontinued eq true and UnitsInStock gt 0](http://localhost:4004/northwind-model/Products?$filter=Discontinued%20eq%20true%20and%20UnitsInStock%20gt%200)
 <br>Combination of filters with logical operators `eq`, `gt` and `and`
 
 **Products in Category 2 that are expensive (25.00 or more)**
-<br>[Categories/2/Products?$filter=UnitPrice gt 25.00](http://localhost:8000/northwind-model/Categories/2/Products?$filter=UnitPrice%20ge%2025.00)
+<br>[Categories/2/Products?$filter=UnitPrice gt 25.00](http://localhost:4004/northwind-model/Categories/2/Products?$filter=UnitPrice%20ge%2025.00)
 <br>Filter on collection via navigation with logical operator `ge`
 
 **All people with female gender**
-<br>[People/$filter=Gender has Microsoft.OData.SampleService.Models.TripPin.PersonGender'Female'](https://services.odata.org/V4/(S(lx1imovv1xsufthdbddd4sps))/TripPinServiceRW/People?$filter=Gender%20has%20Microsoft.OData.SampleService.Models.TripPin.PersonGender%27Female%27)
+<br>[People/$filter=Gender has Microsoft.OData.SampleService.Models.TripPin.PersonGender'Female'](https://services.odata.org/V4/TripPinService/People?$filter=Gender%20has%20Microsoft.OData.SampleService.Models.TripPin.PersonGender%27Female%27)
 <br>Referencing an enumeration value, using logical operator `has`
 
 **Categories with fewer than 10 products**
-<br>[Categories?\$filter=Products/\$count lt 10](http://localhost:8000/northwind-model/Categories?$filter=Products/$count%20lt%2010)
+<br>[Categories?\$filter=Products/\$count lt 10](http://localhost:4004/northwind-model/Categories?$filter=Products/$count%20lt%2010)
 <br>Using the raw value of the number of items in a collection (via navigation)
 
 ### Arithmetic operators
@@ -39,46 +49,46 @@
 ### Canonical functions
 
 **Suppliers with a '555' phone code, and a homepage**
-<br>[Suppliers?\$filter=contains(Phone,'555') and HomePage ne 'NULL'](http://localhost:8000/northwind-model/Suppliers?$filter=contains(Phone,%27555%27)%20and%20HomePage%20ne%20%27NULL%27)
+<br>[Suppliers?\$filter=contains(Phone,'555') and HomePage ne 'NULL'](http://localhost:4004/northwind-model/Suppliers?$filter=contains(Phone,%27555%27)%20and%20HomePage%20ne%20%27NULL%27)
 <br>Using the `contains` function (note arg order and no spaces)
 
 **Products with short names**
-<br>[Products?\$filter=length(ProductName) lt 5](http://localhost:8000/northwind-model/Products?$filter=length(ProductName)%20lt%205)
+<br>[Products?\$filter=length(ProductName) lt 5](http://localhost:4004/northwind-model/Products?$filter=length(ProductName)%20lt%205)
 <br>Combining the canonical function `length`'s output with the logical operator `lt`
 
 **Airports where the IATA and ICAO codes diverge**
-<br>[Airports?\$select=Name,IcaoCode,IataCode&\$filter=not contains(IcaoCode,IataCode)](https://services.odata.org/V4/(S(lx1imovv1xsufthdbddd4sps))/TripPinServiceRW/Airports?$select=Name,IcaoCode,IataCode&$filter=not%20contains(IcaoCode,IataCode))
+<br>[Airports?\$select=Name,IcaoCode,IataCode&\$filter=not contains(IcaoCode,IataCode)](https://services.odata.org/V4/TripPinService/Airports?$select=Name,IcaoCode,IataCode&$filter=not%20contains(IcaoCode,IataCode))
 <br>Using the `contains` function with the logical operator `not`, with both parameters passed to `contains` being properties (see also [IATA vs ICAO](https://en.wikipedia.org/wiki/ICAO_airport_code#ICAO_codes_versus_IATA_codes))
 
 ## More advanced usage
 
 **Just for info - discontinued products and their categories, by category**
-<br>[Products?\$filter=Discontinued eq true&\$select=ProductName\&\$expand=Category($select=CategoryName,CategoryID)&\$orderby=Category/CategoryID](http://localhost:8000/northwind-model/Products?$filter=Discontinued%20eq%20true&$select=ProductName&$expand=Category($select=CategoryName,CategoryID)&$orderby=Category/CategoryID)
+<br>[Products?\$filter=Discontinued eq true&\$select=ProductName\&\$expand=Category($select=CategoryName,CategoryID)&\$orderby=Category/CategoryID](http://localhost:4004/northwind-model/Products?$filter=Discontinued%20eq%20true&$select=ProductName&$expand=Category($select=CategoryName,CategoryID)&$orderby=Category/CategoryID)
 
 ### Using a lambda operator
 
 **Categories that have high stock products**
-<br>[Categories?\$expand=Products&\$filter=Products/any(x:x/UnitsInStock gt 100)](http://localhost:8000/northwind-model/Categories?$expand=Products&$filter=Products/any(x:x/UnitsInStock%20gt%20100))
+<br>[Categories?\$expand=Products&\$filter=Products/any(x:x/UnitsInStock gt 100)](http://localhost:4004/northwind-model/Categories?$expand=Products&$filter=Products/any(x:x/UnitsInStock%20gt%20100))
 <br>You can filter on the expanded collection (but this example is probably not what you want)
 
 **Categories with no discontinued products**
-<br>[Categories?\$expand=Products&\$filter=Products/all(x:x/Discontinued eq false)](http://localhost:8000/northwind-model/Categories?$expand=Products&$filter=Products/all(x:x/Discontinued%20eq%20false))
+<br>[Categories?\$expand=Products&\$filter=Products/all(x:x/Discontinued eq false)](http://localhost:4004/northwind-model/Categories?$expand=Products&$filter=Products/all(x:x/Discontinued%20eq%20false))
 <br>Using the `all` lambda operator (as opposed to `any`)
 
 **Categories with at least some stock for every products**
-<br>[Categories?\$expand=Products($select=ProductName)&\$filter=Products/all(x:x/UnitsInStock gt 0)](http://localhost:8000/northwind-model/Categories?$expand=Products($select=ProductName)&$filter=Products/all(x:x/UnitsInStock%20gt%200))
+<br>[Categories?\$expand=Products($select=ProductName)&\$filter=Products/all(x:x/UnitsInStock gt 0)](http://localhost:4004/northwind-model/Categories?$expand=Products($select=ProductName)&$filter=Products/all(x:x/UnitsInStock%20gt%200))
 <br>Another example using `all`, and restricting the expanded collection data to just the product name
 
 ### Applying filter to an expanded navigation property
 
 **Categories and their discontinued products**
-<br>[Categories?\$expand=Products($filter=Discontinued eq true)](http://localhost:8000/northwind-model/Categories?$expand=Products($filter=Discontinued%20eq%20true))
+<br>[Categories?\$expand=Products($filter=Discontinued eq true)](http://localhost:4004/northwind-model/Categories?$expand=Products($filter=Discontinued%20eq%20true))
 <br>A `$filter` query option can be applied to the expanded navigation property
 
 **Categories and the names of their discontinued products**
-<br>[Categories?\$expand=Products(\$filter=Discontinued eq true;\$select=ProductName)](http://localhost:8000/northwind-model/Categories?$expand=Products($filter=Discontinued%20eq%20true;$select=ProductName))
+<br>[Categories?\$expand=Products(\$filter=Discontinued eq true;\$select=ProductName)](http://localhost:4004/northwind-model/Categories?$expand=Products($filter=Discontinued%20eq%20true;$select=ProductName))
 <br>Multiple system query options can be applied, separated by semicolons
 
 **A better list of categories and their discontinued products**
-<br>[Categories?\$expand=Products(\$filter=Discontinued eq true)&\$filter=Products/any(x:x/Discontinued eq true)](http://localhost:8000/northwind-model/Categories?$expand=Products($filter=Discontinued%20eq%20true)&$filter=Products/any(x:x/Discontinued%20eq%20true))
+<br>[Categories?\$expand=Products(\$filter=Discontinued eq true)&\$filter=Products/any(x:x/Discontinued eq true)](http://localhost:4004/northwind-model/Categories?$expand=Products($filter=Discontinued%20eq%20true)&$filter=Products/any(x:x/Discontinued%20eq%20true))
 <br>Combining a `$filter` on the expanded navigation property with a `$filter` using the `any` lambda operator
