@@ -10,7 +10,7 @@ These examples use various OData services:
 * [TripPin](https://www.odata.org/blog/trippin-new-odata-v4-sample-service/)
 * [The CAP based V4 OData service in this repository](http://localhost:4004/northwind-model/)
 
-To run the CAP based V4 OData service in this repository, use `cds run`. The default port 4004 is used. 
+To run the CAP based V4 OData service in this repository, use `cds run`. The default port 4004 is used.
 
 ## Basic usage
 
@@ -46,7 +46,7 @@ To run the CAP based V4 OData service in this repository, use `cds run`. The def
 <br>[Products?\$filter=UnitsInStock mul UnitPrice gt 3500.00](https://services.odata.org/v4/northwind/northwind.svc/Products?$filter=UnitsInStock%20mul%20UnitPrice%20gt%203500.00)
 <br>Combining two numeric properties with `mul`
 
-### Canonical functions
+### String functions
 
 **Suppliers with a '555' phone code, and a homepage**
 <br>[Suppliers?\$filter=contains(Phone,'555') and HomePage ne 'NULL'](http://localhost:4004/northwind-model/Suppliers?$filter=contains(Phone,%27555%27)%20and%20HomePage%20ne%20%27NULL%27)
@@ -59,6 +59,22 @@ To run the CAP based V4 OData service in this repository, use `cds run`. The def
 **Airports where the IATA and ICAO codes diverge**
 <br>[Airports?\$select=Name,IcaoCode,IataCode&\$filter=not contains(IcaoCode,IataCode)](https://services.odata.org/V4/TripPinService/Airports?$select=Name,IcaoCode,IataCode&$filter=not%20contains(IcaoCode,IataCode))
 <br>Using the `contains` function with the logical operator `not`, with both parameters passed to `contains` being properties (see also [IATA vs ICAO](https://en.wikipedia.org/wiki/ICAO_airport_code#ICAO_codes_versus_IATA_codes))
+
+### Date & time functions
+
+**Orders shipped on the first of the month**
+<br>[Summary_of_Sales_by_Years?\$count=true&\$filter=day(ShippedDate) eq 1](https://services.odata.org/v4/northwind/northwind.svc/Summary_of_Sales_by_Years?$count=true&$filter=day(ShippedDate)%20eq%201)
+<br>Using `day`, one of many date and time functions, plus `$count` as a system query option, to show the number of orders
+
+**Total order value for 1996**
+<br>[Summary_of_Sales_by_Years?\$apply=filter(year(ShippedDate) eq 1996)/aggregate(Subtotal with sum as Total)](http://localhost:4004/northwind-model/Summary_of_Sales_by_Years?$apply=filter(year(ShippedDate)%20eq%201996)/aggregate(Subtotal%20with%20sum%20as%20Total)
+<br>Using `year` with a bonus digression on aggregation via `$apply`
+
+## Arithmetic functions
+
+**Products with pennies in the unit price**
+<br>[Products?\$filter=round(UnitPrice) ne UnitPrice](http://localhost:4004/northwind-model/Products?$filter=round(UnitPrice)%20ne%20UnitPrice)
+<br>Rounding the `UnitPrice` value with `round` and comparing it to what it was with the logical operator `ne`
 
 ## More advanced usage
 
