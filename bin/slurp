@@ -5,7 +5,7 @@
 # in the same shape as the core JSON data in the entityset,
 # i.e. { "value": [ <entity object>, <entity object>, ... ] }
 
-# Takes an optional parameter for the entity set name, defaults to 'Products'
+# Requires an entity set name to be specified (e.g. Products).
 
 set -euo pipefail
 
