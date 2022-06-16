@@ -67,7 +67,7 @@ To run the CAP based V4 OData service in this repository, use `cds run`. The def
 <br>Using `day`, one of many date and time functions, plus `$count` as a system query option, to show the number of orders
 
 **Total order value for 1996**
-<br>[Summary_of_Sales_by_Years?\$apply=filter(year(ShippedDate) eq 1996)/aggregate(Subtotal with sum as Total)](http://localhost:4004/northwind-model/Summary_of_Sales_by_Years?$apply=filter(year(ShippedDate)%20eq%201996)/aggregate(Subtotal%20with%20sum%20as%20Total)
+<br>[Summary_of_Sales_by_Years?\$apply=filter(year(ShippedDate) eq 1996)/aggregate(Subtotal with sum as Total)](http://localhost:4004/northwind-model/Summary_of_Sales_by_Years?$apply=filter(year(ShippedDate)%20eq%201996)/aggregate(Subtotal%20with%20sum%20as%20Total))
 <br>Using `year` with a bonus digression on aggregation via `$apply`
 
 ## Arithmetic functions
@@ -108,3 +108,9 @@ To run the CAP based V4 OData service in this repository, use `cds run`. The def
 **A better list of categories and their discontinued products**
 <br>[Categories?\$expand=Products(\$filter=Discontinued eq true)&\$filter=Products/any(x:x/Discontinued eq true)](http://localhost:4004/northwind-model/Categories?$expand=Products($filter=Discontinued%20eq%20true)&$filter=Products/any(x:x/Discontinued%20eq%20true))
 <br>Combining a `$filter` on the expanded navigation property with a `$filter` using the `any` lambda operator
+
+### Miscellaneous
+
+**Email addresses in the 'example' domain for a person**
+<br>[TripPinServiceRW/People('russellwhyte')/Emails?\$filter=contains($it,'example')](https://services.odata.org/V4/(S(lx1imovv1xsufthdbddd4sps))/TripPinServiceRW/People('russellwhyte')/Emails?$filter=contains($it,%27example%27))
+<br>Using the `$it` literal to refer back to the collection in the resource path (here `Emails` is just an array of string values)
