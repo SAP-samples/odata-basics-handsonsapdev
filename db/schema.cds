@@ -35,3 +35,9 @@ entity Categories {
       Description: String;
       Products: Association to many Products on Products.Category = $self;
 }
+
+entity Summary_of_Sales_by_Years {
+  key OrderID: Integer;
+      ShippedDate: DateTime;
+      Subtotal: Decimal;
+}

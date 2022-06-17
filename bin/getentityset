@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Downloads a complete Northwind entityset into a file 
+# <entityset>.json. 
+
+# Combines the northwindentitysets and slurp scripts which
+# are assumed to be in the same directory as this script.
+
+declare here="${0%/*}"
+declare entityset
+entityset="$("$here/northwindentitysets" | fzf)"
+"$here/slurp" "$entityset" > "$entityset.json"

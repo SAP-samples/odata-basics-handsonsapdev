@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+pandoc \
+  -f markdown-smart \
+  -t html \
+  --ascii \
+  "${1:?Specify source file}" > "${2:?Specify target file}"

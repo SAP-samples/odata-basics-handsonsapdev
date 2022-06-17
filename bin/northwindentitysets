@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Returns a list of entity sets in the Northwind V4 OData service
+
+set -euo pipefail
+
+declare serviceroot='https://services.odata.org/v4/northwind/northwind.svc/'
+
+main() {
+
+  curl \
+    --silent \
+    --fail \
+    --url "${serviceroot}?\$format=json" \
+    | jq -r '.value[]|select(.kind == "EntitySet").url'
+
+}
+
+main "$@"

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Slurps an entire Northwind entity set (collection) by
+# following @odata.nextLink references. Produces JSON output
+# in the same shape as the core JSON data in the entityset,
+# i.e. { "value": [ <entity object>, <entity object>, ... ] }
+
+# Requires an entity set name to be specified (e.g. Products).
+
+set -euo pipefail
+
+declare serviceroot='https://services.odata.org/v4/northwind/northwind.svc/'
+declare entityset="${1:?Specify Northwind entity set name e.g. Products}"
+declare pause=0.5
+
+main() {
+
+  local tempfile
+  tempfile="$(mktemp)"
+  local nextlink="$entityset"
+  {
+    while [[ -n $nextlink ]]; do
+      curl \
+        --silent \
+        --location \
+        --fail \
+        --url "${serviceroot}${nextlink}" \
+        > "$tempfile"
+      jq --raw-output '.value' "$tempfile"
+      nextlink="$(jq --raw-output '.["@odata.nextLink"]' "$tempfile")"
+      if [[ -n $nextlink ]]; then sleep "$pause"; fi
+    done
+  } | jq --slurp '{value:flatten}'
+
+}
+
+main "$@"
