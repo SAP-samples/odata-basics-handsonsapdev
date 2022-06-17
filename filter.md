@@ -25,7 +25,7 @@ To run the CAP based V4 OData service in this repository, use `cds run`. The def
 <br>Combination of filters with logical operators `eq`, `gt` and `and`
 
 **Products in Category 2 that are expensive (25.00 or more)**
-<br>[Categories/2/Products?$filter=UnitPrice gt 25.00](http://localhost:4004/northwind-model/Categories/2/Products?$filter=UnitPrice%20ge%2025.00)
+<br>[Categories/2/Products?$filter=UnitPrice ge 25.00](http://localhost:4004/northwind-model/Categories/2/Products?$filter=UnitPrice%20ge%2025.00)
 <br>Filter on collection via navigation with logical operator `ge`
 
 **All people with female gender**
