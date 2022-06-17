@@ -91,7 +91,7 @@ To run the CAP based V4 OData service in this repository, use `cds run`. The def
 <br>[Categories?\$expand=Products&\$filter=Products/all(x:x/Discontinued eq false)](http://localhost:4004/northwind-model/Categories?$expand=Products&$filter=Products/all(x:x/Discontinued%20eq%20false))
 <br>Using the `all` lambda operator (as opposed to `any`)
 
-**Categories with at least some stock for every products**
+**Categories with at least some stock for every product**
 <br>[Categories?\$expand=Products($select=ProductName)&\$filter=Products/all(x:x/UnitsInStock gt 0)](http://localhost:4004/northwind-model/Categories?$expand=Products($select=ProductName)&$filter=Products/all(x:x/UnitsInStock%20gt%200))
 <br>Another example using `all`, and restricting the expanded collection data to just the product name
 
