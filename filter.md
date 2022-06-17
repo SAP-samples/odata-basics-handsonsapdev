@@ -70,7 +70,7 @@ To run the CAP based V4 OData service in this repository, use `cds run`. The def
 <br>[Summary_of_Sales_by_Years?\$apply=filter(year(ShippedDate) eq 1996)/aggregate(Subtotal with sum as Total)](http://localhost:4004/northwind-model/Summary_of_Sales_by_Years?$apply=filter(year(ShippedDate)%20eq%201996)/aggregate(Subtotal%20with%20sum%20as%20Total))
 <br>Using `year` with a bonus digression on aggregation via `$apply`
 
-## Arithmetic functions
+### Arithmetic functions
 
 **Products with pennies in the unit price**
 <br>[Products?\$filter=round(UnitPrice) ne UnitPrice](http://localhost:4004/northwind-model/Products?$filter=round(UnitPrice)%20ne%20UnitPrice)
