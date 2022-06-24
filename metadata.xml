@@ -14,6 +14,8 @@
           <NavigationPropertyBinding Path="Products" Target="Products"/>
         </EntitySet>
         <EntitySet Name="Summary_of_Sales_by_Years" EntityType="NorthwindModel.Summary_of_Sales_by_Years"/>
+        <FunctionImport Name="randomProduct" Function="NorthwindModel.randomProduct" EntitySet="Products"/>
+        <ActionImport Name="submitOrder" Action="NorthwindModel.submitOrder"/>
       </EntityContainer>
       <EntityType Name="Products">
         <Key>
@@ -71,6 +73,18 @@
         <Property Name="ShippedDate" Type="Edm.DateTimeOffset"/>
         <Property Name="Subtotal" Type="Edm.Decimal" Scale="variable"/>
       </EntityType>
+      <Action Name="discontinue" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="NorthwindModel.Products"/>
+        <ReturnType Type="NorthwindModel.Products"/>
+      </Action>
+      <Function Name="randomProduct" IsBound="false" IsComposable="false">
+        <ReturnType Type="NorthwindModel.Products"/>
+      </Function>
+      <Action Name="submitOrder" IsBound="false">
+        <Parameter Name="product" Type="Edm.Int32"/>
+        <Parameter Name="quantity" Type="Edm.Int32"/>
+        <ReturnType Type="Edm.Int32"/>
+      </Action>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
