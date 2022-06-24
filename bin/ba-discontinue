@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+declare product="${1:-1}"
+curl \
+  --header 'Content-Type: application/json' \
+  --silent \
+  --fail \
+  --request POST \
+  --url "http://localhost:4004/northwind-model/Products/$product/NorthwindModel.discontinue"

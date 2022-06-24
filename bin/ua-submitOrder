@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+declare product="${1:-1}"
+declare quantity="${2:-1}"
+curl \
+  --header 'Content-Type: application/json' \
+  --data '{"product":'"$product"',"quantity":'"$quantity"'}' \
+  --url 'http://localhost:4004/northwind-model/submitOrder'

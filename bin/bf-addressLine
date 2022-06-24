@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+declare supplier="${1:-1}"
+curl \
+  --silent \
+  --fail \
+  --request GET \
+  --url "http://localhost:4004/northwind-model/Suppliers/$supplier/NorthwindModel.addressLine()"

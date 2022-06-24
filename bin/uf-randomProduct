@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+curl \
+  --silent \
+  --fail \
+  --url 'http://localhost:4004/northwind-model/randomProduct()' \
+  | jq .
