@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="NorthwindModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Products" EntityType="NorthwindModel.Products">
+          <NavigationPropertyBinding Path="Category" Target="Categories"/>
+          <NavigationPropertyBinding Path="Supplier" Target="Suppliers"/>
+        </EntitySet>
+        <EntitySet Name="Suppliers" EntityType="NorthwindModel.Suppliers">
+          <NavigationPropertyBinding Path="Products" Target="Products"/>
+        </EntitySet>
+        <EntitySet Name="Categories" EntityType="NorthwindModel.Categories">
+          <NavigationPropertyBinding Path="Products" Target="Products"/>
+        </EntitySet>
+        <EntitySet Name="Summary_of_Sales_by_Years" EntityType="NorthwindModel.Summary_of_Sales_by_Years"/>
+      </EntityContainer>
+      <EntityType Name="Products">
+        <Key>
+          <PropertyRef Name="ProductID"/>
+        </Key>
+        <Property Name="ProductID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="ProductName" Type="Edm.String"/>
+        <Property Name="QuantityPerUnit" Type="Edm.String"/>
+        <Property Name="UnitPrice" Type="Edm.Decimal" Scale="variable"/>
+        <NavigationProperty Name="Category" Type="NorthwindModel.Categories" Partner="Products">
+          <ReferentialConstraint Property="Category_CategoryID" ReferencedProperty="CategoryID"/>
+        </NavigationProperty>
+        <Property Name="Category_CategoryID" Type="Edm.Int32"/>
+        <NavigationProperty Name="Supplier" Type="NorthwindModel.Suppliers" Partner="Products">
+          <ReferentialConstraint Property="Supplier_SupplierID" ReferencedProperty="SupplierID"/>
+        </NavigationProperty>
+        <Property Name="Supplier_SupplierID" Type="Edm.Int32"/>
+        <Property Name="UnitsInStock" Type="Edm.Int32"/>
+        <Property Name="UnitsOnOrder" Type="Edm.Int32"/>
+        <Property Name="ReorderLevel" Type="Edm.Int32"/>
+        <Property Name="Discontinued" Type="Edm.Boolean"/>
+      </EntityType>
+      <EntityType Name="Suppliers">
+        <Key>
+          <PropertyRef Name="SupplierID"/>
+        </Key>
+        <Property Name="SupplierID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="CompanyName" Type="Edm.String"/>
+        <Property Name="ContactName" Type="Edm.String"/>
+        <Property Name="ContactTitle" Type="Edm.String"/>
+        <Property Name="Address" Type="Edm.String"/>
+        <Property Name="City" Type="Edm.String"/>
+        <Property Name="Region" Type="Edm.String"/>
+        <Property Name="PostalCode" Type="Edm.String"/>
+        <Property Name="Country" Type="Edm.String"/>
+        <Property Name="Phone" Type="Edm.String"/>
+        <Property Name="Fax" Type="Edm.String"/>
+        <Property Name="HomePage" Type="Edm.String"/>
+        <NavigationProperty Name="Products" Type="Collection(NorthwindModel.Products)" Partner="Supplier"/>
+      </EntityType>
+      <EntityType Name="Categories">
+        <Key>
+          <PropertyRef Name="CategoryID"/>
+        </Key>
+        <Property Name="CategoryID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="CategoryName" Type="Edm.String"/>
+        <Property Name="Description" Type="Edm.String"/>
+        <NavigationProperty Name="Products" Type="Collection(NorthwindModel.Products)" Partner="Category"/>
+      </EntityType>
+      <EntityType Name="Summary_of_Sales_by_Years">
+        <Key>
+          <PropertyRef Name="OrderID"/>
+        </Key>
+        <Property Name="OrderID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="ShippedDate" Type="Edm.DateTimeOffset"/>
+        <Property Name="Subtotal" Type="Edm.Decimal" Scale="variable"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
