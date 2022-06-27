@@ -8,7 +8,13 @@ This repository contains a simple OData service to accompany the "Back to basics
 
 ## Getting started
 
-After cloning this repo and moving into the repo top directory, first deploy to a local SQLite database and then start the service up:
+After cloning this repo and moving into the repo top directory, first set things up by installing the required packages:
+
+```bash
+npm install
+```
+
+Then, after deploying to a local SQLite database, start the service up:
 
 ```bash
 cds deploy --to sqlite
