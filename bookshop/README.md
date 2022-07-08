@@ -174,12 +174,12 @@ The standards document [OData Vocabularies Version 4.0 Committee Specification /
 
 |Vocabulary|Namespace|Description|
 |-|-|-|
-|Core|[Org.OData.Core.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md)|A set of basic annotation terms describing behavioral aspects along with annotation terms that can be used to define other vocabularies (yes, meta all the things!)|
-|Capabilities|[Org.OData.Capabilities.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md)|A vocabulary of terms that provide a way for service authors to describe certain capabilities of an OData Service|
-|Measures|[Org.OData.Measures.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Measures.V1.md)|A set of terms describing monetary amounts and measured quantities|
-|Validation|[Org.OData.Validation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Validation.V1.md)|A set of terms describing validation rules|
-|Aggregation|[Org.OData.Aggregation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Aggregation.V1.md)|A set of terms describing which data in a given entity model can be aggregated, and how|
-|Authorization|[Org.OData.Authorization.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Authorization.V1.md)|A set of terms describing a web authorization flow|
+|Core|[Org.OData.Core.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md)|Terms describing behavioral aspects along with annotation terms that can be used to define other vocabularies (yes, meta all the things!)|
+|Capabilities|[Org.OData.Capabilities.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md)|Terms that provide a way for service authors to describe certain capabilities of an OData Service|
+|Measures|[Org.OData.Measures.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Measures.V1.md)|Terms describing monetary amounts and measured quantities|
+|Validation|[Org.OData.Validation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Validation.V1.md)|Terms describing validation rules|
+|Aggregation|[Org.OData.Aggregation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Aggregation.V1.md)|Terms describing which data in a given entity model can be aggregated, and how|
+|Authorization|[Org.OData.Authorization.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Authorization.V1.md)|Terms describing a web authorization flow|
 
 > If you like rabbit-holes, note that all the vocabularies are described in machine-readable format ... using terms in the Core vocabulary. [Even the Core vocabulary itself](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml). Don't forget to come back once you've explored!
 
