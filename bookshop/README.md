@@ -205,11 +205,11 @@ Looking at the contents of that table of terms, we see something like this (this
 
 Term|Type|Description
 :---|:---|:----------
-[HeaderInfo](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L58:~:text=<Term%20Name="-,HeaderInfo,-")|[HeaderInfoType?](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType)|<a name="HeaderInfo"></a>Information for the header area of an entity representation. HeaderInfo is mandatory for main entity types of the model
-[Identification](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L109:~:text=<Term%20Name="-,Identification,-")|\[[DataFieldAbstract](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract)\]|<a name="Identification"></a>Collection of fields identifying the object
-[Badge](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L114:~:text=<Term%20Name="-,Badge,-")|[BadgeType?](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#BadgeType)|<a name="Badge"></a>Information usually displayed in the form of a business card
-[LineItem](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L141:~:text=<Term%20Name="-,LineItem,-")|\[[DataFieldAbstract](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract)\]|<a name="LineItem"></a>Collection of data fields for representation in a table or list
-[SelectionFields](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L931:~:text=<Term%20Name="-,SelectionFields,-")|\[PropertyPath\]|<a name="SelectionFields"></a>Properties that might be relevant for filtering a collection of entities of this type
+[HeaderInfo](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L58:~:text=%3CTerm%20Name=%22-,HeaderInfo,-%22)|[HeaderInfoType?](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType)|Information for the header area of an entity representation. HeaderInfo is mandatory for main entity types of the model
+[Identification](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L109:~:text=%3CTerm%20Name=%22-,Identification,-%22)|\[[DataFieldAbstract](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract)\]|Collection of fields identifying the object
+[Badge](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L114:~:text=%3CTerm%20Name=%22-,Badge,-%22)|[BadgeType?](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#BadgeType)|Information usually displayed in the form of a business card
+[LineItem](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L141:~:text=%3CTerm%20Name=%22-,LineItem,-%22)|\[[DataFieldAbstract](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract)\]|Collection of data fields for representation in a table or list
+[SelectionFields](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L931:~:text=%3CTerm%20Name=%22-,SelectionFields,-%22)|\[PropertyPath\]|Properties that might be relevant for filtering a collection of entities of this type
 
 
 Note that there are terms, and there are types. A term has a value, which is of a certain type.
