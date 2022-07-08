@@ -193,7 +193,7 @@ And so there are other OData annotation vocabularies, for different purposes. SA
 
 Another vocabulary in that list from SAP is the [UI](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md) vocabulary, containing terms relating to presenting data in user interfaces.
 
-Staring at [the table of Terms](https://github.com/SAP-samples/odata-basics-handsonsapdev/blob/annotations/bookshop/README.md) in this vocabulary (or any for that matter) will help us interpret the CDS in `index.cds` we saw earlier, in other words, this:
+Staring at [the table of Terms](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#terms) in this vocabulary (or any for that matter) will help us interpret the CDS in `index.cds` we saw earlier, in other words, this:
 
 ```cds
 annotate CatalogService.Books with @( ... );
