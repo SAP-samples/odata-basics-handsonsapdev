@@ -201,7 +201,7 @@ annotate CatalogService.Books with @( ... );
 
 And specifically it will help us to interpret everything inside the `@( ... )`.
 
-Looking at the contents of that table, we see something like this:
+Looking at the contents of that table, we see something like this (this extract shows just some of the many terms):
 
 Term|Type|Description
 :---|:---|:----------
@@ -209,6 +209,8 @@ Term|Type|Description
 [Identification](./UI.xml#L109:~:text=<Term%20Name="-,Identification,-")|\[[DataFieldAbstract](#DataFieldAbstract)\]|<a name="Identification"></a>Collection of fields identifying the object
 [Badge](./UI.xml#L114:~:text=<Term%20Name="-,Badge,-")|[BadgeType?](#BadgeType)|<a name="Badge"></a>Information usually displayed in the form of a business card
 [LineItem](./UI.xml#L141:~:text=<Term%20Name="-,LineItem,-")|\[[DataFieldAbstract](#DataFieldAbstract)\]|<a name="LineItem"></a>Collection of data fields for representation in a table or list
+[SelectionFields](./UI.xml#L931:~:text=<Term%20Name="-,SelectionFields,-")|\[PropertyPath\]|<a name="SelectionFields"></a>Properties that might be relevant for filtering a collection of entities of this type
+
 
 Note that there are terms, and there are types. A term has a value, which is of a certain type.
 
@@ -218,6 +220,11 @@ In the table we can recognize some of the content that we saw [in index.cds](#in
 - SelectionFields
 - LineItem
 - HeaderInfo
+
+Note in each case, the type is a single (camelcased) word, which may be wrapped in square brackets, which denotes a collection of values of that type. In the table exerpt above, some (most) of the single words are also hyperlinked. For example, following [HeaderInfoType](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) leads to a table of properties that belong to that type, i.e. properties that the type consists of - in other words, the type is a structure (called a record, or object, see later). There's one type in this table exerpt that is not hyperlinked, and that is `AnnotationPath`. That's because that type is not a structure, but a single, scalar thing (also called a primitive).
+
+With this knowledge, we can now understand, for example, that the value for the `SelectionFields` term is a collection of paths.
+
 
 #### Syntax for annotations in CDS
 
