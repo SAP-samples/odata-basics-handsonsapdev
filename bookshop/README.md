@@ -164,7 +164,7 @@ annotate CatalogService.Books with @(
 
 This example is considerably more involved than the `@readonly` example previously. Let's take it bit by bit. You may also want to refer to the [OData Annotations section of the CAP documentation](https://cap.cloud.sap/docs/advanced/odata#annotations).
 
-#### The OData 'UI' annotation vocabulary
+#### OData annotation vocabularies
 
 The previous `@readonly` example was a CDS annotation that resulted in the generation of multiple OData annotations.
 
@@ -187,8 +187,16 @@ In the [Introduction](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/c
 
 > Other OData vocabularies may be created, shared, and maintained outside of this work product.
 
-And so there are other OData annotation vocabularies, for different purposes. SAP has created some, and they are documented publicly in the [SAP/odata-vocabularies](https://github.com/SAP/odata-vocabularies) repository on GitHub.
+And so there are other OData annotation vocabularies, for different purposes. SAP has created some, and they are documented publicly in the [SAP/odata-vocabularies](https://github.com/SAP/odata-vocabularies) repository on GitHub. There are vocabularies called Analytics, Communication, DataIntegration and also one called [Common](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Common.md) which contains terms common for all SAP vocabularies.
 
-There are vocabularies called Analytics, Communication, DataIntegration and also one called [Common](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Common.md) which contains terms common for all SAP vocabularies.
+#### The UI annotation vocabulary
 
-And there is a vocabulary called [UI](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md), containing terms relating to presenting data in user interfaces.
+Another vocabulary in that list from SAP is the [UI](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md) vocabulary, containing terms relating to presenting data in user interfaces.
+
+Staring at [the table of Terms](https://github.com/SAP-samples/odata-basics-handsonsapdev/blob/annotations/bookshop/README.md) in this vocabulary (or any for that matter) will help us interpret the CDS in `index.cds` we saw earlier, in other words, this:
+
+```cds
+annotate CatalogService.Books with @( ... );
+```
+
+And specifically it will help us to interpret everything inside the `@( ... )`.
