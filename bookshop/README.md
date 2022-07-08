@@ -166,11 +166,11 @@ This example is considerably more involved than the `@readonly` example previous
 
 #### OData annotation vocabularies
 
-First, let's consider the simple and single word "readonly", and then what appears to be words within a wider syntactical structure in this larger example.
+First, let's consider the simple and single word "readonly", and then what appears to be words ("UI", "Identification", "LineItem", "Value", etc) within a wider syntactical structure in this larger example.
 
 The previous `@readonly` example was a CDS annotation that resulted in the generation of multiple OData annotations.
 
-In this current example, what we're looking at are annotations that are closer to the direct use of the combination of the OData annotation concepts of "vocabulary" and "term". To understand this better, let's start by taking a atep back, and staring at the OData annotation vocabularies for a few minutes.
+In this current example, what we're looking at are annotations that are closer to the direct use of the combination of the OData annotation concepts of "vocabulary" and "term". To understand this better, let's start by taking a step back, and staring at the OData annotation vocabularies for a few minutes.
 
 The standards document [OData Vocabularies Version 4.0 Committee Specification / Public Review Draft 01](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html) outlines six vocabularies as follows (the summary document [OData specs](https://github.com/qmacro/odata-specs/blob/master/overview.md) provides some information on the different document stages such as "Committee Specification" and "Public Review"):
 
@@ -191,7 +191,7 @@ And so there are other OData annotation vocabularies, for different purposes. SA
 
 #### The UI annotation vocabulary
 
-Another vocabulary in that list from SAP is the [UI](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md) vocabulary, containing terms relating to presenting data in user interfaces.
+Another one in that list from SAP is the [UI](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md) vocabulary, containing terms relating to presenting data in user interfaces.
 
 Staring at [the table of Terms](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#terms) in this vocabulary (or any for that matter) will help us interpret the CDS in `index.cds` we saw earlier, in other words, this:
 
@@ -199,34 +199,35 @@ Staring at [the table of Terms](https://github.com/SAP/odata-vocabularies/blob/m
 annotate CatalogService.Books with @( ... );
 ```
 
-And specifically it will help us to interpret everything inside the `@( ... )`.
+More specifically it will help us to interpret everything inside the `@( ... )`.
 
-Looking at the contents of that table, we see something like this (this extract shows just some of the many terms):
+Looking at the contents of that table of terms, we see something like this (this excerpt shows just some of the many terms):
 
 Term|Type|Description
 :---|:---|:----------
-[HeaderInfo](./UI.xml#L58:~:text=<Term%20Name="-,HeaderInfo,-")|[HeaderInfoType?](#HeaderInfoType)|<a name="HeaderInfo"></a>Information for the header area of an entity representation. HeaderInfo is mandatory for main entity types of the model
-[Identification](./UI.xml#L109:~:text=<Term%20Name="-,Identification,-")|\[[DataFieldAbstract](#DataFieldAbstract)\]|<a name="Identification"></a>Collection of fields identifying the object
-[Badge](./UI.xml#L114:~:text=<Term%20Name="-,Badge,-")|[BadgeType?](#BadgeType)|<a name="Badge"></a>Information usually displayed in the form of a business card
-[LineItem](./UI.xml#L141:~:text=<Term%20Name="-,LineItem,-")|\[[DataFieldAbstract](#DataFieldAbstract)\]|<a name="LineItem"></a>Collection of data fields for representation in a table or list
-[SelectionFields](./UI.xml#L931:~:text=<Term%20Name="-,SelectionFields,-")|\[PropertyPath\]|<a name="SelectionFields"></a>Properties that might be relevant for filtering a collection of entities of this type
+[HeaderInfo](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L58:~:text=<Term%20Name="-,HeaderInfo,-")|[HeaderInfoType?](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType)|<a name="HeaderInfo"></a>Information for the header area of an entity representation. HeaderInfo is mandatory for main entity types of the model
+[Identification](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L109:~:text=<Term%20Name="-,Identification,-")|\[[DataFieldAbstract](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract)\]|<a name="Identification"></a>Collection of fields identifying the object
+[Badge](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L114:~:text=<Term%20Name="-,Badge,-")|[BadgeType?](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#BadgeType)|<a name="Badge"></a>Information usually displayed in the form of a business card
+[LineItem](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L141:~:text=<Term%20Name="-,LineItem,-")|\[[DataFieldAbstract](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract)\]|<a name="LineItem"></a>Collection of data fields for representation in a table or list
+[SelectionFields](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#L931:~:text=<Term%20Name="-,SelectionFields,-")|\[PropertyPath\]|<a name="SelectionFields"></a>Properties that might be relevant for filtering a collection of entities of this type
 
 
 Note that there are terms, and there are types. A term has a value, which is of a certain type.
 
-In the table we can recognize some of the content that we saw [in index.cds](#in-indexcds) as terms in the UI Vocabulary:
+In the table we can recognize some of the content that we saw [in index.cds](#in-indexcds) as terms in this UI Vocabulary:
 
-- Identification
-- SelectionFields
-- LineItem
-- HeaderInfo
+- `Identification`
+- `SelectionFields`
+- `LineItem`
+- `HeaderInfo`
 
-Note in each case, the type is a single (camelcased) word, which may be wrapped in square brackets, which denotes a collection of values of that type.
+Note in each case, the type is a single (camelcased) word. The word may be wrapped in square brackets, which denotes a collection of values of that type.
 
 In the table exerpt above, most of the single words are also hyperlinked. For example, following [HeaderInfoType](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) leads to a table of properties that belong to that type, i.e. properties that the type consists of - in other words, the type is a structure (called a record, or object, see later). There's one type in this table exerpt that is not hyperlinked, and that is `PropertyPath`. That's because that type is not a structure, but a single, scalar thing (also called a primitive).
 
-With this knowledge, we can now understand, for example, that the value for the `SelectionFields` term is a collection of paths to properties.
+> If you're wondering about the `?` suffix on some of the types, ignore it for now - it doesn't help our understanding that we need here.
 
+With this knowledge, we can now understand, for example, that the value for the `SelectionFields` term is a collection of paths to properties, and that the value for the `HeaderInfo` term is a record of properties including `TypeName`, `TypeNamePlural`, `Title` and so on.
 
 #### Syntax for annotations in CDS
 
