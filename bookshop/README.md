@@ -166,9 +166,11 @@ This example is considerably more involved than the `@readonly` example previous
 
 #### OData annotation vocabularies
 
+First, let's consider the simple and single word "readonly", and then what appears to be words within a wider syntactical structure in this larger example.
+
 The previous `@readonly` example was a CDS annotation that resulted in the generation of multiple OData annotations.
 
-In this current example, what we're looking at are annotations that are closer to the direct use of the combination of the OData annotation concepts of Vocabulary and Term. To understand this better, let's stare at the OData annotation vocabularies for a bit.
+In this current example, what we're looking at are annotations that are closer to the direct use of the combination of the OData annotation concepts of "vocabulary" and "term". To understand this better, let's start by taking a atep back, and staring at the OData annotation vocabularies for a few minutes.
 
 The standards document [OData Vocabularies Version 4.0 Committee Specification / Public Review Draft 01](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html) outlines six vocabularies as follows (the summary document [OData specs](https://github.com/qmacro/odata-specs/blob/master/overview.md) provides some information on the different document stages such as "Committee Specification" and "Public Review"):
 
@@ -183,11 +185,9 @@ The standards document [OData Vocabularies Version 4.0 Committee Specification /
 
 > If you like rabbit-holes, note that all the vocabularies are described in machine-readable format ... using terms in the Core vocabulary. [Even the Core vocabulary itself](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml). Don't forget to come back once you've explored!
 
-In the [Introduction](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html#_Toc472083025) section of the standards document, it says that:
+In the [Introduction](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html#_Toc472083025) section of the standards document, it says that "_Other OData vocabularies may be created, shared, and maintained outside of this work product_".
 
-> Other OData vocabularies may be created, shared, and maintained outside of this work product.
-
-And so there are other OData annotation vocabularies, for different purposes. SAP has created some, and they are documented publicly in the [SAP/odata-vocabularies](https://github.com/SAP/odata-vocabularies) repository on GitHub. There are vocabularies called Analytics, Communication, DataIntegration and also one called [Common](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Common.md) which contains terms common for all SAP vocabularies.
+And so there are other OData annotation vocabularies, for different purposes. SAP has created some, and they are documented publicly in the [SAP/odata-vocabularies](https://github.com/SAP/odata-vocabularies) repository on GitHub. Amongst the SAP vocabularies, there are ones called Analytics, Communication, DataIntegration and also one called [Common](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Common.md) which contains terms common for all SAP vocabularies.
 
 #### The UI annotation vocabulary
 
@@ -199,7 +199,20 @@ Staring at [the table of Terms](https://github.com/SAP/odata-vocabularies/blob/m
 annotate CatalogService.Books with @( ... );
 ```
 
-And specifically it will help us to interpret everything inside the `@( ... )`. For example, we can recognize some of the content that we saw [in index.cds](#in-indexcds) as terms in the UI Vocabulary:
+And specifically it will help us to interpret everything inside the `@( ... )`.
+
+Looking at the contents of that table, we see something like this:
+
+Term|Type|Description
+:---|:---|:----------
+[HeaderInfo](./UI.xml#L58:~:text=<Term%20Name="-,HeaderInfo,-")|[HeaderInfoType?](#HeaderInfoType)|<a name="HeaderInfo"></a>Information for the header area of an entity representation. HeaderInfo is mandatory for main entity types of the model
+[Identification](./UI.xml#L109:~:text=<Term%20Name="-,Identification,-")|\[[DataFieldAbstract](#DataFieldAbstract)\]|<a name="Identification"></a>Collection of fields identifying the object
+[Badge](./UI.xml#L114:~:text=<Term%20Name="-,Badge,-")|[BadgeType?](#BadgeType)|<a name="Badge"></a>Information usually displayed in the form of a business card
+[LineItem](./UI.xml#L141:~:text=<Term%20Name="-,LineItem,-")|\[[DataFieldAbstract](#DataFieldAbstract)\]|<a name="LineItem"></a>Collection of data fields for representation in a table or list
+
+Note that there are terms, and there are types. A term has a value, which is of a certain type.
+
+In the table we can recognize some of the content that we saw [in index.cds](#in-indexcds) as terms in the UI Vocabulary:
 
 - Identification
 - SelectionFields
