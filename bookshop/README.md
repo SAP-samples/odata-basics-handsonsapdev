@@ -1,6 +1,6 @@
 # Sample app demonstrating some OData annotations
 
-> ⚠ This document is a work-in-progress!
+> ⚠ This document is a work-in-progress
 
 This is the complete app that is built over the series of exercises in the (now archived) [repo for the SAP CodeJam on CAP with Node.js](https://github.com/SAP-archive/cloud-cap-nodejs-codejam). It is included in this repo as it is a good illustration of some basic annotations. In particular, have a look at the annotations in the `index.cds` and `service.cds` files in the `srv/` directory.
 
@@ -199,4 +199,33 @@ Staring at [the table of Terms](https://github.com/SAP/odata-vocabularies/blob/m
 annotate CatalogService.Books with @( ... );
 ```
 
-And specifically it will help us to interpret everything inside the `@( ... )`.
+And specifically it will help us to interpret everything inside the `@( ... )`. For example, we can recognize some of the content that we saw [in index.cds](#in-indexcds) as terms in the UI Vocabulary:
+
+- Identification
+- SelectionFields
+- LineItem
+- HeaderInfo
+
+#### Syntax for annotations in CDS
+
+Another aspect that we need to consider when embarking on an attempt to parse the annotations above, is CDS's [annotation syntax](https://cap.cloud.sap/docs/cds/cdl#annotation-syntax). For any given term in a vocabulary, the annotation is written as follows:
+
+```cds
+@vocabulary.term
+```
+
+followed by the value for that annotation.
+
+> There are also [qualified annotations](https://cap.cloud.sap/docs/advanced/odata#qualified-annotations) which you should be aware of, but they're not in play in these examples.
+
+Multiple annotations can be specified in one go by listing them one after another, or, more commonly, by listing them inside a `@( ... )` construct and separating them with commas. We can clearly see this in action in our [index.cds](#in-indexcds) example.
+
+#### Annotation values
+
+The final piece in the puzzle to understanding and interpreting annotation definitions and the EDMX content that is generated is the set of different value types for annotation terms. If you're familiar with the core value types in many programming languages, you'll be at home here. There are:
+
+|Value Type|Alternative Name|Example|
+|-|-|-|
+|Scalar|Primitive|a string, boolean value or number|
+|Object|Record|a collection of name value pairs like this: `{ name1: value1, name2: value2, ... }`|
+|Array|Collection|a list of other types, either primitives or records, enclosed in `[ ... ]`|
