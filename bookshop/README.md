@@ -223,11 +223,27 @@ In the table we can recognize some of the content that we saw [in index.cds](#in
 
 Note in each case, the type is a single (camelcased) word. The word may be wrapped in square brackets, which denotes a collection of values of that type.
 
-In the table exerpt above, most of the single words are also hyperlinked. For example, following [HeaderInfoType](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) leads to a table of properties that belong to that type, i.e. properties that the type consists of - in other words, the type is a structure (called a record, or object, see later). There's one type in this table exerpt that is not hyperlinked, and that is `PropertyPath`. That's because that type is not a structure, but a single, scalar thing (also called a primitive).
+In the table exerpt above, most of the single words are also hyperlinked. For example, following [HeaderInfoType](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) leads to a table of properties that belong to that type, i.e. properties that the type consists of - in other words, the type is a structure (called a record, or object, see later).
+
+This is how the `HeaderInfoType` type is described, in terms of the properties within:
+
+Property|Type|Description
+:-------|:---|:----------
+[TypeName](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L63:~:text=<ComplexType%20Name="-,HeaderInfoType,-")|String|Name of the main entity type
+[TypeNamePlural](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L67:~:text=<ComplexType%20Name="-,HeaderInfoType,-")|String|Plural form of the name of the main entity type
+[Title](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L71:~:text=<ComplexType%20Name="-,HeaderInfoType,-")|[DataFieldAbstract?](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract)|Title, e.g. for overview pages<br>This can be a DataField and any of its children, or a DataFieldForAnnotation targeting ConnectedFields.
+[Description](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L81:~:text=<ComplexType%20Name="-,HeaderInfoType,-")|[DataFieldAbstract?](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract)|Description, e.g. for overview pages<br>This can be a DataField and any of its children, or a DataFieldForAnnotation targeting ConnectedFields.
+[Image](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L91:~:text=<ComplexType%20Name="-,HeaderInfoType,-") *([Experimental](Common.md#Experimental))*|Stream?|Image for an instance of the entity type. If the property has a valid value, it can be used for the visualization of the instance. If it is not available or not valid the value of the property `ImageUrl` can be used instead.
+[ImageUrl](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L95:~:text=<ComplexType%20Name="-,HeaderInfoType,-")|URL?|Image URL for an instance of the entity type. If the property has a valid value, it can be used for the visualization of the instance. If it is not available or not valid the value of the property `TypeImageUrl` can be used instead.
+[TypeImageUrl](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L99:~:text=<ComplexType%20Name="-,HeaderInfoType,-")|URL?|Image URL for the entity type
+[Initials](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L103:~:text=<ComplexType%20Name="-,HeaderInfoType,-") *([Experimental](Common.md#Experimental))*|String?|Latin letters to be used in case no `Image`, `ImageUrl`, or `TypeImageUrl` is present
+
+With this knowledge, we can now understand, for example, that the value for the `HeaderInfo` term is a record of properties including `TypeName`, `TypeNamePlural`, `Title` and so on.
+
+There's one term in the main table of terms excerpt that has a type that is not hyperlinked. The term is `SelectionFields` and the type is `PropertyPath`. That's because that type is not a structure, but a single, scalar thing (also called a primitive). This implies that the value for the `SelectionFields` term is a collection of paths to properties.
 
 > If you're wondering about the `?` suffix on some of the types, ignore it for now - it doesn't help our understanding that we need here.
 
-With this knowledge, we can now understand, for example, that the value for the `SelectionFields` term is a collection of paths to properties, and that the value for the `HeaderInfo` term is a record of properties including `TypeName`, `TypeNamePlural`, `Title` and so on.
 
 #### Syntax for annotations in CDS
 
