@@ -15,8 +15,8 @@ cds watch
 
 Here's a brief overview of the annotations used in the service which is part of this app. Note that the word "annotation" is used in two different contexts here:
 
-- [CAP annotations](https://cap.cloud.sap/docs/cds/annotations) in CDS form are used to describe and augment core data service definitions, and are prefixed with the `@` symbol
-- [OData annotations](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html), organised into [vocabularies](https://github.com/oasis-tcs/odata-vocabularies), that provide extra information on service metadata
+- [Annotations in CAP](https://cap.cloud.sap/docs/cds/annotations) in CDS form are used to describe and augment core data service definitions, and are prefixed with the `@` symbol
+- [OData annotations](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html), organised into [vocabularies](https://github.com/oasis-tcs/odata-vocabularies), that provide extra information on an OData service's metadata and appear in the EDMX definition (in the `$metadata` document)
 
 When used in an OData context (i.e. when describing an OData service in CDS) the CAP annotations will result in valid OData annotations. These annotations will belong to either standard OData vocabularies, or SAP specific vocabularies.
 
@@ -24,7 +24,7 @@ When used in an OData context (i.e. when describing an OData service in CDS) the
 
 ### In service.cds
 
-`@readonly`
+CDS annotation: `@readonly`
 
 Used at the entity level, this CDS annotation generates specific terms in the [OData "Capabilities" vocabulary](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html#_Toc472083030).
 
@@ -108,7 +108,8 @@ In case you're wondering - these restrictions that are imposed via the `@readonl
 Assuming that the service is running (with `cds run`) you can try this yourself, like this:
 
 ```bash
-curl --silent \
+curl
+  --silent \
   --header 'Content-Type: application/json' \
   --include \
   --data '{"quantity": 10}' \
@@ -132,3 +133,50 @@ Content-Length: 104
 ```
 
 Nice!
+
+### In index.cds
+
+In this file you can see the explicit [annotate](https://cap.cloud.sap/docs/cds/cdl#annotate) directive in action. This is contrast to the previous example, where the `@readonly` annotation was specified directly with the definition of what was being annotated.
+
+```cds
+annotate CatalogService.Books with @(
+    UI: {
+        Identification: [ {Value: title} ],
+        SelectionFields: [ title ],
+        LineItem: [
+            {Value: ID},
+            {Value: title},
+            {Value: author.name},
+            {Value: author_ID},
+            {Value: stock}
+        ],
+        HeaderInfo: {
+            TypeName: '{i18n>Book}',
+            TypeNamePlural: '{i18n>Books}',
+            Title: {Value: title},
+            Description: {Value: author.name}
+        }
+    }
+);
+```
+
+This example is considerably more involved than the `@readonly` example previously. Let's take it bit by bit. You may also want to refer to the [OData Annotations section of the CAP documentation](https://cap.cloud.sap/docs/advanced/odata#annotations).
+
+#### The OData 'UI' annotation vocabulary
+
+The previous `@readonly` example was a CDS annotation that resulted in the generation of multiple OData annotations.
+
+In this current example, what we're looking at are annotations that are closer to the direct use of the combination of the OData annotation concepts of Vocabulary and Term. To understand this better, let's stare at the OData annotation vocabularies and try to categorize them.
+
+The standards document [OData Vocabularies Version 4.0 Committee Specification / Public Review Draft 01](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html) outlines six vocabularies as follows:
+
+|Vocabulary|Namespace|Description|
+|-|-|-|
+|Core|[Org.OData.Core.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md)|A set of basic annotation terms describing behavioral aspects along with annotation terms that can be used to define other vocabularies (yes, meta all the things!)|
+|Capabilities|[Org.OData.Capabilities.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md)|A vocabulary of terms that provide a way for service authors to describe certain capabilities of an OData Service|
+|Measures|[Org.OData.Measures.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Measures.V1.md)|A set of terms describing monetary amounts and measured quantities|
+|Validation|[Org.OData.Validation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Validation.V1.md)|A set of terms describing validation rules|
+|Aggregation|[Org.OData.Aggregation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Aggregation.V1.md)|A set of terms describing which data in a given entity model can be aggregated, and how|
+|Authorization|[Org.OData.Authorization.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Authorization.V1.md)|A set of terms describing a web authorization flow|
+
+> The summary document [OData specs](https://github.com/qmacro/odata-specs/blob/master/overview.md) provides some information on the different document stages such as "Committee Specification" and "Public Review")
