@@ -166,9 +166,9 @@ This example is considerably more involved than the `@readonly` example previous
 
 The previous `@readonly` example was a CDS annotation that resulted in the generation of multiple OData annotations.
 
-In this current example, what we're looking at are annotations that are closer to the direct use of the combination of the OData annotation concepts of Vocabulary and Term. To understand this better, let's stare at the OData annotation vocabularies and try to categorize them.
+In this current example, what we're looking at are annotations that are closer to the direct use of the combination of the OData annotation concepts of Vocabulary and Term. To understand this better, let's stare at the OData annotation vocabularies for a bit.
 
-The standards document [OData Vocabularies Version 4.0 Committee Specification / Public Review Draft 01](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html) outlines six vocabularies as follows:
+The standards document [OData Vocabularies Version 4.0 Committee Specification / Public Review Draft 01](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html) outlines six vocabularies as follows (the summary document [OData specs](https://github.com/qmacro/odata-specs/blob/master/overview.md) provides some information on the different document stages such as "Committee Specification" and "Public Review"):
 
 |Vocabulary|Namespace|Description|
 |-|-|-|
@@ -179,4 +179,14 @@ The standards document [OData Vocabularies Version 4.0 Committee Specification /
 |Aggregation|[Org.OData.Aggregation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Aggregation.V1.md)|A set of terms describing which data in a given entity model can be aggregated, and how|
 |Authorization|[Org.OData.Authorization.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Authorization.V1.md)|A set of terms describing a web authorization flow|
 
-> The summary document [OData specs](https://github.com/qmacro/odata-specs/blob/master/overview.md) provides some information on the different document stages such as "Committee Specification" and "Public Review")
+> If you like rabbit-holes, note that all the vocabularies are described in machine-readable format ... using terms in the Core vocabulary. [Even the Core vocabulary itself](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml). Don't forget to come back once you've explored!
+
+In the [Introduction](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html#_Toc472083025) section of the standards document, it says that:
+
+> Other OData vocabularies may be created, shared, and maintained outside of this work product.
+
+And so there are other OData annotation vocabularies, for different purposes. SAP has created some, and they are documented publicly in the [SAP/odata-vocabularies](https://github.com/SAP/odata-vocabularies) repository on GitHub.
+
+There are vocabularies called Analytics, Communication, DataIntegration and also one called [Common](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Common.md) which contains terms common for all SAP vocabularies.
+
+And there is a vocabulary called [UI](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md), containing terms relating to presenting data in user interfaces.
