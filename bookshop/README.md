@@ -221,9 +221,11 @@ In the table we can recognize some of the content that we saw [in index.cds](#in
 - LineItem
 - HeaderInfo
 
-Note in each case, the type is a single (camelcased) word, which may be wrapped in square brackets, which denotes a collection of values of that type. In the table exerpt above, some (most) of the single words are also hyperlinked. For example, following [HeaderInfoType](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) leads to a table of properties that belong to that type, i.e. properties that the type consists of - in other words, the type is a structure (called a record, or object, see later). There's one type in this table exerpt that is not hyperlinked, and that is `AnnotationPath`. That's because that type is not a structure, but a single, scalar thing (also called a primitive).
+Note in each case, the type is a single (camelcased) word, which may be wrapped in square brackets, which denotes a collection of values of that type.
 
-With this knowledge, we can now understand, for example, that the value for the `SelectionFields` term is a collection of paths.
+In the table exerpt above, most of the single words are also hyperlinked. For example, following [HeaderInfoType](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) leads to a table of properties that belong to that type, i.e. properties that the type consists of - in other words, the type is a structure (called a record, or object, see later). There's one type in this table exerpt that is not hyperlinked, and that is `PropertyPath`. That's because that type is not a structure, but a single, scalar thing (also called a primitive).
+
+With this knowledge, we can now understand, for example, that the value for the `SelectionFields` term is a collection of paths to properties.
 
 
 #### Syntax for annotations in CDS
