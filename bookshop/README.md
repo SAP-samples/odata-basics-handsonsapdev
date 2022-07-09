@@ -140,6 +140,8 @@ Nice!
 
 In this file you can see the explicit [annotate](https://cap.cloud.sap/docs/cds/cdl#annotate) directive in action. This is contrast to the previous example, where the `@readonly` annotation was specified directly with the definition of what was being annotated.
 
+(There's a parallel here to a feature of OData annotations, and how they're served. In a similar way to how annotations in CDS can be either alongside, or separate from, the data definitions they're describing, so also can OData annotations be served in the same EDMX document (the OData service's metadata document) or as a separate resource. Not anything earth shatteringly important, but worth mentioning here.)
+
 ```cds
 annotate CatalogService.Books with @(
     UI: {
