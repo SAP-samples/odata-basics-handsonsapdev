@@ -10,7 +10,7 @@ Move to this directory and start things up, like this:
 
 ```bash
 cd workingapp
-cds watch
+cds run
 ```
 
 ## The annotations
