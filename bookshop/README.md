@@ -174,6 +174,8 @@ The previous `@readonly` example was a CDS annotation that resulted in the gener
 
 In this current example, what we're looking at are annotations that are closer to the direct use of the combination of the OData annotation concepts of "vocabulary" and "term". To understand this better, let's start by taking a step back, and staring at the OData annotation vocabularies for a few minutes.
 
+Put simply, OData annotations are expressed in the form of terms, which are grouped together into vocabularies.
+
 The standards document [OData Vocabularies Version 4.0 Committee Specification / Public Review Draft 01](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html) outlines six vocabularies as follows (the summary document [OData specs](https://github.com/qmacro/odata-specs/blob/master/overview.md) provides some information on the different document stages such as "Committee Specification" and "Public Review"):
 
 |Vocabulary|Namespace|Description|
@@ -249,7 +251,7 @@ There's one term in the main table of terms excerpt that has a type that is not 
 
 #### Syntax for annotations in CDS
 
-Another aspect that we need to consider when embarking on an attempt to parse the annotations above, is CDS's [annotation syntax](https://cap.cloud.sap/docs/cds/cdl#annotation-syntax). For any given term in a vocabulary, the annotation is written as follows:
+Another aspect that we need to consider when attempting to parse the annotations above, is CDS's [annotation syntax](https://cap.cloud.sap/docs/cds/cdl#annotation-syntax). For any given term in a vocabulary, the annotation is written as follows:
 
 ```cds
 @vocabulary.term
@@ -257,7 +259,7 @@ Another aspect that we need to consider when embarking on an attempt to parse th
 
 followed by the value for that annotation.
 
-> There are also [qualified annotations](https://cap.cloud.sap/docs/advanced/odata#qualified-annotations) which you should be aware of, but they're not in play in these examples.
+> There are also [qualified annotations](https://cap.cloud.sap/docs/advanced/odata#qualified-annotations) of which you should be aware, but they're not in play in these examples.
 
 Multiple annotations can be specified in one go by listing them one after another, or, more commonly, by listing them inside a `@( ... )` construct and separating them with commas. We can clearly see this in action in our [index.cds](#in-indexcds) example.
 
