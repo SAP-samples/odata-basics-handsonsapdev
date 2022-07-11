@@ -200,10 +200,10 @@ Another one in that list from SAP is the [UI](https://github.com/SAP/odata-vocab
 Staring at [the table of Terms](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#terms) in this vocabulary (or any for that matter) will help us interpret the CDS in `index.cds` we saw earlier, in other words, this:
 
 ```cds
-annotate CatalogService.Books with @( ... );
+annotate CatalogService.Books with @(...);
 ```
 
-More specifically it will help us to interpret everything inside the `@( ... )`.
+More specifically it will help us to interpret everything inside the `@(...)`.
 
 Looking at the contents of that table of terms, we see something like this (this excerpt shows just some of the many terms):
 
@@ -261,7 +261,7 @@ followed by the value for that annotation.
 
 > There are also [qualified annotations](https://cap.cloud.sap/docs/advanced/odata#qualified-annotations) of which you should be aware, but they're not in play in these examples.
 
-Multiple annotations can be specified in one go by listing them one after another, or, more commonly, by listing them inside a `@( ... )` construct and separating them with commas. We can clearly see this in action in our [index.cds](#in-indexcds) example.
+Multiple annotations can be specified in one go by listing them one after another, or, more commonly, by listing them inside a `@(...)` construct and separating them with commas. We can clearly see this in action in our [index.cds](#in-indexcds) example.
 
 #### Annotation values
 
@@ -529,7 +529,7 @@ This will cause the following to be generated:
 </edmx:Edmx>
 ```
 
-If you're wondering about the lack of `@( ... )` in this example, rest assured, we'll get to it.
+If you're wondering about the lack of `@(...)` in this example, rest assured, we'll get to it.
 
 **Collection example: vocabulary `Capabilities`, term `DeleteRestrictions`**
 
@@ -539,7 +539,7 @@ The last value type, collection, is used to express an array of values. Those va
 [ 1, 2, 3 ]
 ```
 
-Or it can contain more complex values such as objects; this is how JSON representations of OData entity set resources are typically expressed, such as this list of books [from our running app](#getting-things-running), at the location <http://localhost:4004/catalog/Books>, specifically conveyed in the `value` property here (which is a JSON array (`[...]`):
+Or it can contain more complex values such as objects; this is how JSON representations of OData entity set resources are typically expressed, such as this list of books [from our running app](#getting-things-running), at the location <http://localhost:4004/catalog/Books>, specifically conveyed in the `value` property here (which is a JSON array (`[...]`)):
 
 ```json
 {
@@ -566,22 +566,180 @@ Or it can contain more complex values such as objects; this is how JSON represen
 }
 ```
 
+> Of course, in JSON and in some programming languages, these arrays can contain elements of different types, but in this context of annotation value types, the child elements will all be the same (scalars, objects, etc).
 
+For an example of a collection value type, we'll turn to the SAP [UI vocabulary](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md), and specifically the `SelectionFields` term, which has the following description: "Properties that might be relevant for filtering a collection of entities of this type". The term is described as having this type:
 
-#### Expressing multiple annotations
+```
+[PropertyPath]
+```
 
-TODO We haven't thought yet about the `@( ... )` construct and why it's used, but we're almost there. For now, let's consider an alternative way of expressing the value we want for the `Deletable` property in the `DeleteRestrictions` term, which uses `@( ... )`:
+The collection notation (`[...]`) is reflected in the [XML based definition of the vocabulary](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml) thus:
 
+```xml
+<Term Name="SelectionFields" Type="Collection(Edm.PropertyPath)" Nullable="false" AppliesTo="EntityType">
+  <Annotation Term="UI.ThingPerspective" />
+  <Annotation Term="Core.Description" String="Properties that might be relevant for filtering a collection of entities of this type" />
+</Term>
+```
 
+> While the previous vocabularies we've examined recently have been OASIS standard vocabularies with namespaces such as `Org.OData.Core.V1` and `Org.OData.Capabilities.V1`, this vocabulary from SAP has the namespace `com.sap.vocabularies.UI.v1`.
 
+Again, note that this annotation term is itself annotated. But more importantly here note the term type is expressed as a `Collection(...)` of the type `Edm.PropertyPath`. This is the definitive evidence that the `SelectionFields` term has a value which is a collection.
 
+Why don't we take the example of the `SelectionFields` term from [in index.cds](#in-indexcds) and apply it to our simple `Categories` entity:
+
+```cds
+service Northwind {
+  @UI.SelectionFields: [ ID, description ]
+  entity Categories {
+    key ID: Integer;
+    description: String;
+  }
+}
+```
+
+When compiled to EDMX, this is what we get:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Northwind" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Categories" EntityType="Northwind.Categories"/>
+      </EntityContainer>
+      <EntityType Name="Categories">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="description" Type="Edm.String"/>
+      </EntityType>
+      <Annotations Target="Northwind.Categories">
+        <Annotation Term="UI.SelectionFields">
+          <Collection>
+            <PropertyPath>ID</PropertyPath>
+            <PropertyPath>description</PropertyPath>
+          </Collection>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+```
+
+The collection type is clearly comprehensible to us; even the name of the `<PropertyPath>` elements that are therein contained are not unfamiliar now (remember, the type of the `SelectionFields` was is described like this: `[PropertyPath]`). There's nothing within the `<Annotations>` element that is a mystery to us.
+
+#### Expressing multiple annotations with @(...)
+
+The examples so far have been single and separate. Using the `Capabilities` vocabulary's `DeleteRestrictions` term here, the `Core` vocabulary's `Description` term there, and the `UI` vocabulary's `SelectionFields` term yet somewhere else.
+
+That's fine, and these can all be included together for an entity, as follows:
+
+```cds
+service Northwind {
+  @Core.Description: 'The general type of product'
+  @Capabilities.DeleteRestrictions.Deletable: false
+  @UI.SelectionFields: [ ID, title ]
+  entity Categories {
+    key ID: Integer;
+    description: String;
+  }
+}
+```
+
+Often there's a need to use multiple annotations in the same vocabulary. And in order to avoid repeating the vocabulary name, the `@(...)` construct can be used, in conjunction with curly braces. It might help to illustrate this first by considering an alternative (albeit extreme) way of expressing the `DeleteRestrictions` annotation:
+
+```cds
+@(Capabilities: { DeleteRestrictions: { Deletable: false } } )
+```
+
+With extra whitespace, this looks like this:
+
+```cds
+@(
+  Capabilities: {
+    DeleteRestrictions: {
+      Deletable: false
+    }
+  }
+)
+```
+
+> The `@(...)` construct can also be used to group unrelated annotations too, if you wish.
+
+Each "node" in the dotted hierarchy is exploded into a map (or object) of property and value pairs. Using this syntactical approach, it's easy to see the possibilities open up for expressing multiple terms in the same vocabulary. And this is exactly what's happening [in index.cds](#in-indexcds), as we'll see.
+
+```cds
+annotate CatalogService.Books with @(
+    UI: {
+        Identification: [ {Value: title} ],
+        SelectionFields: [ title ],
+        LineItem: [
+            {Value: ID},
+            {Value: title},
+            {Value: author.name},
+            {Value: author_ID},
+            {Value: stock}
+        ],
+        HeaderInfo: {
+            TypeName: '{i18n>Book}',
+            TypeNamePlural: '{i18n>Books}',
+            Title: {Value: title},
+            Description: {Value: author.name}
+        }
+    }
+);
+```
 
 #### Annotation vocabulary references
 
-TODO: Describe this:
-```xml
-  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
-    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
-  </edmx:Reference>
+Before we leave this long but hopefully enlightening digression, there's one more thing to stare at in the annotation goodness that we find in the OData metadata documents, i.e. in the generated EDMX. For each of the primitive, record and collection examples, we've focused on the `<Annotations>` element in the XML. But there are elements earlier on that are also related.
 
+This is the EDMX from the primitive value example earlier:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Northwind" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Categories" EntityType="Northwind.Categories"/>
+      </EntityContainer>
+      <EntityType Name="Categories">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="description" Type="Edm.String"/>
+      </EntityType>
+      <Annotations Target="Northwind.Categories">
+        <Annotation Term="Core.description" String="The general type of product"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
 ```
+
+The annotation itself is `<Annotation Term="Core.description" String="The general type of product"/>`.
+
+In the EDMX, before the `<DataServices>` section (which contains the `<Schema>` which in turn contains the definitions of the annotations, entity sets, entity types, complex types and so on), there is a `<edmx:Reference>` to the `Core` vocabulary namespace.
+
+```xml
+<edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+  <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+</edmx:Reference>
+```
+
+This qualifies the `Core` vocabulary prefixes on the terms used, and includes the relevant vocabulary namespace `Org.OData.Core.V1` and also the canonical URL where the definition can be found, i.e. <https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml>.
+
+Now you're aware of these, you'll start to notice their existence, to pick them out of the XML noise at the start of the metadata documents.
+
+### Interpreting the detailed annotations
