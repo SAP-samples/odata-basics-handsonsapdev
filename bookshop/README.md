@@ -412,7 +412,7 @@ But for this `Capabilities` vocabulary's `DeleteRestrictions` term, the type is 
 
 So record style annotation types are defined with the `<ComplexType>` element, and this `DeleteRestrictionsType` [looks like this](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.xml#L791-L827) (to keep it brief, only a few properties are shown here):
 
-```
+```xml
 <ComplexType Name="DeleteRestrictionsType">
   <Property Name="Deletable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
     <Annotation Term="Core.Description" String="Entities can be deleted" />
@@ -467,7 +467,7 @@ entity Categories @(Capabilities:{
 }
 ```
 
-(The other annotations here are also generated in the EDMX, but we've just focused on the `Capabilities.DeleteRestrictions` term for now.
+(The other annotations here are also generated in the EDMX, but we've just focused on the `Capabilities.DeleteRestrictions` term for now.)
 
 We're getting closer to being fully comfortable with the CDS annotation constructs [in index.cds](#in-indexcds). And in fact here we can see something that links where we are on the journey with what we saw back there. And that is the way that the actual `Capabilities` terms, along with the values for the properties of the corresponding records, are expressed.
 
@@ -537,7 +537,7 @@ The last value type, collection, is used to express an array of values. Those va
 [ 1, 2, 3 ]
 ```
 
-Or it can contain more complex values such as objects; this is how JSON representations of OData entity set resources are typically expressed, such as this list of books [from our running app](#getting-things-running), at the location <http://localhost:4004/catalog/Books>, specifically conveyed in the `value` property here (which is a JSON array (`[...]`)):
+Or it can contain more complex values such as objects; this is how JSON representations of OData entity set resources are typically expressed, such as this list of books [from our running app](#getting-things-running), at the location <http://localhost:4004/catalog/Books>, specifically conveyed in the `value` property here (which is a JSON array `[...]`):
 
 ```json
 {
@@ -572,7 +572,7 @@ For an example of a collection value type, we'll turn to the SAP [UI vocabulary]
 [PropertyPath]
 ```
 
-The collection notation (`[...]`) is reflected in the [XML based definition of the vocabulary](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml) thus:
+The collection notation `[...]` is reflected in the [XML based definition of the vocabulary](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml) thus:
 
 ```xml
 <Term Name="SelectionFields" Type="Collection(Edm.PropertyPath)" Nullable="false" AppliesTo="EntityType">
