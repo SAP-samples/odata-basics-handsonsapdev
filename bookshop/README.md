@@ -269,6 +269,59 @@ The final piece in the puzzle to understanding and interpreting annotation defin
 
 |Value Type|Alternative Name|Example|
 |-|-|-|
-|Scalar|Primitive|a string, boolean value or number|
-|Object|Record|a collection of name value pairs like this: `{ name1: value1, name2: value2, ... }`|
-|Array|Collection|a list of other types, either primitives or records, enclosed in `[ ... ]`|
+|Primitive|Scalar|a string, boolean value or number|
+|Record|Object|a collection of name value pairs like this: `{ name1: value1, name2: value2, ... }`|
+|Collection|Array|a list of other types, either primitives or records, enclosed in `[ ... ]`|
+
+Examples for each of these will help us to get a feel for their general shape.
+
+For these examples, we'll use the most basic of service definitions in CDS, and annotate it as appropriate.
+
+The base definition looks like this:
+
+```cds
+service Northwind {
+
+  entity Categories {
+    key ID: Integer;
+    description: String;
+  }
+}
+```
+
+And the EDMX generated from this is as follows:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Northwind" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Categories" EntityType="Northwind.Categories"/>
+      </EntityContainer>
+      <EntityType Name="Categories">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="description" Type="Edm.String"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+```
+
+**Primitive example: `Core.description`**
+
+The [Core vocabulary](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html#_Toc472083029) contains a number of primitive terms, one of which is [Description](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md#Description). This has the type `String` and itself is described as "A brief description of a model element".
+
+For a brief look down the rabbit hole, take a look at the definitive description of the Core vocabulary terms, in [Org.OData.Core.V1.xml](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml), where the Core terms are defined, including [this one](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml#L105-L108):
+
+```xml
+<Term Name="Description" Type="Edm.String">
+  <Annotation Term="Core.Description" String="A brief description of a model element" />
+  <Annotation Term="Core.IsLanguageDependent" />
+</Term>
+```
+
+Wait, what? Is the `Core.description` term itself annotated ... with the `Core.description` term? Yes. But let's pull ourselves back from the hole and continue with this example and our sanity.
