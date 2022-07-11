@@ -2,7 +2,7 @@
 
 > ⚠ This document is a work-in-progress
 
-This is the complete app that is built over the series of exercises in the (now archived) [repo for the SAP CodeJam on CAP with Node.js](https://github.com/SAP-archive/cloud-cap-nodejs-codejam). It is included in this repo as it is a good illustration of some basic annotations. In particular, have a look at the annotations in the `index.cds` and `service.cds` files in the `srv/` directory.
+This is the complete app that is built over the series of exercises in the (now archived) [repo for the SAP CodeJam on CAP with Node.js](https://github.com/SAP-archive/cloud-cap-nodejs-codejam). It is included in this repo as it is a good illustration of some basic annotations. In particular, have a look at the annotations in the [index.cds](srv/index.cds) and [service.cds](srv/service.cds) files in the [srv/](srv/) directory.
 
 ## Getting things running
 
@@ -36,7 +36,7 @@ Specifically, this line:
 
 causes these OData annotation terms to be generated and included in the service metadata document: `DeleteRestrictions`, `InsertRestrictions` and `UpdateRestrictions`.
 
-You can see this for yourself using the `cds` command line tool to generate EDMX for the `Stats` service defined within the `srv/service.cds` file, which looks like this:
+You can see this for yourself using the `cds` command line tool to generate EDMX for the `Stats` service defined within the [srv/service.cds](srv/service.cds) file, which looks like this:
 
 ```cds
 using my.bookshop as my from '../db/schema';
@@ -138,7 +138,7 @@ Nice!
 
 ### In index.cds
 
-In this file you can see the explicit [annotate](https://cap.cloud.sap/docs/cds/cdl#annotate) directive in action. This is contrast to the previous example, where the `@readonly` annotation was specified directly with the definition of what was being annotated.
+In this file, [srv/index.cds](srv/index.cds), you can see the explicit [annotate](https://cap.cloud.sap/docs/cds/cdl#annotate) directive in action. This is contrast to the previous example, where the `@readonly` annotation was specified directly with the definition of what was being annotated.
 
 (There's a parallel here to a feature of OData annotations, and how they're served. In a similar way to how annotations in CDS can be either alongside, or separate from, the data definitions they're describing, so also can OData annotations be served in the same EDMX document (the OData service's metadata document) or as a separate resource. Not anything earth shatteringly important, but worth mentioning here.)
 
@@ -743,3 +743,217 @@ This qualifies the `Core` vocabulary prefixes on the terms used, and includes th
 Now you're aware of these, you'll start to notice their existence, to pick them out of the XML noise at the start of the metadata documents.
 
 ### Interpreting the detailed annotations
+
+OK, it's time to revisit the annotations [in index.cds](#in-indexcds), examine them one by one, and make sure we understand what's generated in the EDMX, and why. Here are the annotations again:
+
+```cds
+annotate CatalogService.Books with @(
+    UI: {
+        Identification: [ {Value: title} ],
+        SelectionFields: [ title ],
+        LineItem: [
+            {Value: ID},
+            {Value: title},
+            {Value: author.name},
+            {Value: author_ID},
+            {Value: stock}
+        ],
+        HeaderInfo: {
+            TypeName: '{i18n>Book}',
+            TypeNamePlural: '{i18n>Books}',
+            Title: {Value: title},
+            Description: {Value: author.name}
+        }
+    }
+);
+```
+
+First, note that this is all of the contents of the [srv/index.cds](srv/index.cds) file. There are no entity type definitions in here. This is an example of keeping the annotations separate; not only via the `annotate` directive, but also in a different file.
+
+The entity type being annotated is `Books`, within the `CatalogService` service, i.e. this reference here in [srv/service.cds](srv/service.cds):
+
+```cds
+using my.bookshop as my from '../db/schema';
+
+service CatalogService {
+  entity Books as projection on my.Books;
+  ...
+}
+```
+
+The `@(...)` construct is being used to group annotations together. In fact, staring at the structure within, we can see that all of the annotations here are terms from the `UI` vocabulary, along with their types (from the [UI Vocabulary](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md) resource):
+
+|Vocabulary|Term|Type|
+|-|-|-|
+|`UI`|`Identification`|`[DataFieldAbstract]`|
+|`UI`|`SelectionFields`|`[PropertyPath]`|
+|`UI`|`LineItem`|`[DataFieldAbstract]`|
+|`UI`|`HeaderInfo`|`HeaderInfoType`|
+
+#### Looking at the DataFieldAbstract type
+
+Both the `Identification` and `LineItem` terms have the same type, which is a collection of [DataFieldAbstract](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#DataFieldAbstract) building blocks. This building block is an abstract type (given its name, that's not a surprise to us) which has concrete instances. One concrete instance of this abstract type is [DataField](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#datafield-datafieldabstract) which is a record with five properties:
+
+|Property|Type|Description|
+|-|-|-|
+|`Label`|`String`|A short, human-readable text suitable for labels and captions in UIs|
+|`Criticality`|`CriticalityType`|Criticality of the data field value|
+|`CriticalityRepresentation`|`CriticalityRepresentationType`|Decides if criticality is visualized in addition by means of an icon|
+|`IconUrl`|`URL`|Optional icon|
+|`Value`|`Untyped`|The data field's value|
+
+The `Value` term is the only one that belongs to this concrete `DataField` type, the rest are from the `DataFieldAbstract` type. You can see this by examining [the canonical machine-readable XML definition of the type](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.xml#L1559-L1586), which looks like this:
+
+```xml
+<ComplexType Name="DataField" BaseType="UI.DataFieldAbstract">
+  <Annotation Term="Core.Description" String="A piece of data" />
+  <Property Name="Value" Type="Edm.Untyped" Nullable="false">
+    <Annotation Term="Core.Description" String="The data field's value" />
+    <Annotation Term="Validation.DerivedTypeConstraint">
+      <Collection>
+        <String>Edm.PrimitiveType</String>
+        <String>Collection(Edm.Binary)</String>
+        <String>Collection(Edm.Boolean)</String>
+        <String>Collection(Edm.Byte)</String>
+        <String>Collection(Edm.Date)</String>
+        <String>Collection(Edm.DateTimeOffset)</String>
+        <String>Collection(Edm.Decimal)</String>
+        <String>Collection(Edm.Double)</String>
+        <String>Collection(Edm.Duration)</String>
+        <String>Collection(Edm.Guid)</String>
+        <String>Collection(Edm.Int16)</String>
+        <String>Collection(Edm.Int32)</String>
+        <String>Collection(Edm.Int64)</String>
+        <String>Collection(Edm.SByte)</String>
+        <String>Collection(Edm.Single)</String>
+        <String>Collection(Edm.String)</String>
+        <String>Collection(Edm.TimeOfDay)</String>
+      </Collection>
+    </Annotation>
+    <Annotation Term="Core.IsLanguageDependent" />
+  </Property>
+</ComplexType>
+```
+
+There's only a single `Property` defined (which is `Value`), with the rest coming from `DataFieldAbstract` which is referenced via the `BaseType` attribute in the `<ComplexType>` element.
+
+> If you're wondering why the type is `DataFieldAbstract` and not `DataField`, see this [question and answer](https://github.com/SAP/odata-vocabularies/issues/190).
+
+#### The UI.Identification term
+
+Now we know about the `DataFieldAbstract` type and its concrete derivation `DataField` that's being used here, we can more comfortably interpret the appearance of the two terms in the CDS annotations:
+
+```cds
+annotate CatalogService.Books with @(
+    UI: {
+        Identification: [ {Value: title} ],
+        LineItem: [
+            {Value: ID},
+            {Value: title},
+            {Value: author.name},
+            {Value: author_ID},
+            {Value: stock}
+        ]
+    }
+);
+```
+
+Every part of each of these annotations is now within our grasp. First, consider the syntax. This part:
+
+```cds
+@(
+  UI: {
+    Identification: [ {Value: title} ]
+  }
+);
+```
+
+can be compressed thus:
+
+```cds
+@UI.Identfication: [ { Value: title } ]
+```
+
+It can't be compressed further; if we were to specify the following:
+
+```cds
+@UI.Identfication.Value: title
+```
+
+then the compiler would emit this:
+
+```
+[WARNING] In annotation translation: found complex type, but expected type 'Collection(UI.DataFieldAbstract)', target: Northwind.Categories, annotation: UI.Identification
+```
+
+because the type is a *Collection* of complex types (records), not a single complex type.
+
+Anyway, what's being expressed here is that the entity type is to be "identified" by the `title` property (of the `Books` entity type).
+
+#### The UI.LineItem term
+
+The `LineItem` term is very similar, except that there is more than one record given as the value. Again, the type of the term is `[DataFieldAbstract]`, and what's being used is a collection of concrete `DataField` instances, with a value specified for their `Value` property. These values that are specified (`ID`, `title`, and so on) are properties in the model.
+
+Note in passing that one of these model properties (`author.name`) is via the `Books` entity type relationship with the `Authors` entity type, and another (author_ID) is a generated property from the use of the managed association to create that relationship.
+
+#### The UI.SelectionFields term
+
+This has been covered earlier, and is (in this instance) a collection of (a single) primitive value, the `title` property path. The annotation appears like this:
+
+```cds
+annotate CatalogService.Books with @(
+    UI: {
+        SelectionFields: [ title ]
+    }
+);
+
+but the annotation itself could be also be compressed like this:
+
+```cds
+annotate CatalogService.Books with @(
+    UI.SelectionFields: [ title ]
+);
+
+#### The UI.HeaderInfo term
+
+Here's what this term looks like in isolation:
+
+```cds
+annotate CatalogService.Books with @(
+    UI: {
+        HeaderInfo: {
+            TypeName: '{i18n>Book}',
+            TypeNamePlural: '{i18n>Books}',
+            Title: {Value: title},
+            Description: {Value: author.name}
+        }
+    }
+);
+```
+
+While not so much compressed, this could have equally expressed as follows:
+
+```cds
+annotate CatalogService.Books with @(
+    UI.HeaderInfo.TypeName: '{i18n>Book}',
+    UI.HeaderInfo.TypeNamePlural: '{i18n>Books}',
+    UI.HeaderInfo.Title.Value: title,
+    UI.HeaderInfo.Description.Value: author.name
+);
+```
+
+Rewriting this `HeaderInfo` annotation term like this draws our attention to the subtle but significant difference in the curly braces used here.
+
+For the `TypeName` and `TypeNamePlural` properties of the `HeaderInfoType` type (see the [HeaderInfoType reference](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) that describes the `HeaderInfo` term, the values are defined with the `String` type.
+
+And the string values are both references to internationalized string data, using the standard UI5 and CDS syntax for this:
+
+```
+{modelname>property}
+```
+
+In other words, the curly braces here are part of the syntax for specifying a model property in CDS. Inside (single-quoted) strings.
+
+But the values for the `Title` and `Description` properties of the `HeaderInfoType` type are not strings, but records. Complex types, in other words, via our friend `DataFieldAbstract`. The description of these two properties in the [HeaderInfoType reference](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) states: "_This can be a DataField and any of its children, or a DataFieldForAnnotation targeting ConnectedFields._". And just like before, the concrete type used here is `DataField`, with a `Value` property.
+
+In other words, the curly braces in these two properties denote the `DataField` type's record structure that contains the `Value` property.
