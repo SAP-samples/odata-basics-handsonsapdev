@@ -484,3 +484,104 @@ In the `Capabilities` vocabulary, the `DeleteRestrictions` term is described by 
 ```
 Capabilities.DeleteRestrictions.Deletable: false
 ```
+
+This expression is not exactly what we see in the longhand equivalent of `@readonly` above, but we can see that it works, by using it to annotate our test `Categories` entity precisely:
+
+```cds
+service Northwind {
+  @Capabilities.DeleteRestrictions.Deletable: false
+  entity Categories {
+    key ID: Integer;
+    description: String;
+  }
+}
+```
+
+This will cause the following to be generated:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Northwind" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Categories" EntityType="Northwind.Categories"/>
+      </EntityContainer>
+      <EntityType Name="Categories">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="description" Type="Edm.String"/>
+      </EntityType>
+      <Annotations Target="Northwind.EntityContainer/Categories">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+```
+
+If you're wondering about the lack of `@( ... )` in this example, rest assured, we'll get to it.
+
+**Collection example: vocabulary `Capabilities`, term `DeleteRestrictions`**
+
+The last value type, collection, is used to express an array of values. Those values themselves can be primitive, or they can be records, which in turn contain further values. This is the same concept that can be found in data structures when programming or using declarative modeling in notations such as JSON. For example, an collection, or an array can contain a list of scalars:
+
+```json
+[ 1, 2, 3 ]
+```
+
+Or it can contain more complex values such as objects; this is how JSON representations of OData entity set resources are typically expressed, such as this list of books [from our running app](#getting-things-running), at the location <http://localhost:4004/catalog/Books>, specifically conveyed in the `value` property here (which is a JSON array (`[...]`):
+
+```json
+{
+  "value": [
+    {
+      "ID": 201,
+      "title": "Wuthering Heights",
+      "stock": 12,
+      "author_ID": 101
+    },
+    {
+      "ID": 207,
+      "title": "Jane Eyre",
+      "stock": 11,
+      "author_ID": 107
+    },
+    {
+      "ID": 251,
+      "title": "The Raven",
+      "stock": 333,
+      "author_ID": 150
+    }
+  ]
+}
+```
+
+
+
+#### Expressing multiple annotations
+
+TODO We haven't thought yet about the `@( ... )` construct and why it's used, but we're almost there. For now, let's consider an alternative way of expressing the value we want for the `Deletable` property in the `DeleteRestrictions` term, which uses `@( ... )`:
+
+
+
+
+
+#### Annotation vocabulary references
+
+TODO: Describe this:
+```xml
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+  </edmx:Reference>
+
+```
