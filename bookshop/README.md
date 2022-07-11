@@ -289,7 +289,7 @@ service Northwind {
 }
 ```
 
-And the EDMX generated from this is as follows:
+And the basic EDMX generated from this (see how we did it earlier with the `cds compile` command) is as follows:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -311,7 +311,9 @@ And the EDMX generated from this is as follows:
 </edmx:Edmx>
 ```
 
-**Primitive example: `Core.description`**
+Note that there are no annotations in this EDMX yet.
+
+**Primitive example: vocabulary `Core`, term `Description`**
 
 The [Core vocabulary](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html#_Toc472083029) contains a number of primitive terms, one of which is [Description](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md#Description). This has the type `String` and itself is described as "A brief description of a model element".
 
@@ -325,3 +327,160 @@ For a brief look down the rabbit hole, take a look at the definitive description
 ```
 
 Wait, what? Is the `Core.description` term itself annotated ... with the `Core.description` term? Yes. But let's pull ourselves back from the hole and continue with this example and our sanity.
+
+Let's annotate the `Categories` entity type with this term (there are different ways to add annotations in CDS - refer to [the CAP annotation syntax](https://cap.cloud.sap/docs/cds/cdl#annotation-syntax) for more information):
+
+```cds
+
+This results in:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Northwind" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Categories" EntityType="Northwind.Categories"/>
+      </EntityContainer>
+      <EntityType Name="Categories">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="description" Type="Edm.String"/>
+      </EntityType>
+      <Annotations Target="Northwind.Categories">
+        <Annotation Term="Core.description" String="The general type of product"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+```
+
+Picking out the annotations here, we see this:
+
+```xml
+<Annotations Target="Northwind.Categories">
+  <Annotation Term="Core.description" String="The general type of product"/>
+</Annotations>
+```
+
+Set within an `<Annotations>` element based container that is used to identify the target of the annotations contained within, the single `<Annotation>` element uses attributes to convey the term and the primitive value. Nice and simple.
+
+**Record example: vocabulary `Capabilities`, term `DeleteRestrictions`**
+
+This is one we've seen before. The standard [Capabilities vocabulary](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html#_Toc472083030) contains the [DeleteRestrictions](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md#DeleteRestrictions) term, the value for which is a record, of type [DeleteRestrictionsType](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md#DeleteRestrictionsType).
+
+The definitive definition of this can be found in [Org.OData.Capabilities.V1.xml](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.xml#L791), as a combination of two things:
+
+- the term itself (`DeleteRestrictions`)
+- a definition of the type (`DeleteRestrictionsType`)
+
+The term is defined thus:
+
+```xml
+<Term Name="DeleteRestrictions" Type="Capabilities.DeleteRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton Collection">
+  <Annotation Term="Core.AppliesViaContainer" />
+  <Annotation Term="Core.Description" String="Restrictions on delete operations" />
+</Term>
+```
+
+The term itself is annotated with a couple of terms from the Core vocabulary too. But what's important here is that the type of the term. The type of the `Description` term in the `Core` vocabulary term's type is declared as `Edm.String`:
+
+```xml
+<Term Name="Description" Type="Edm.String">
+```
+
+But for this `Capabilities` vocabulary's `DeleteRestrictions` term, the type is declared as `Capabilities.DeleteRestrictionsType`. Moreover, this type definition comes next, in the form of a normal OData EDMX `ComplexType` definition, something we'd see in other OData services, outside the context of just annotations, to describe thing such as cities or locations, like in the [OData metadata document for the V4 sample OData service "TripPin"](https://services.odata.org/V4/TripPinServiceRW/$metadata):
+
+```xml
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+  <Schema Namespace="Microsoft.OData.SampleService.Models.TripPin" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="City">
+    <Property Name="CountryRegion" Type="Edm.String" Nullable="false"/>
+    <Property Name="Name" Type="Edm.String" Nullable="false"/>
+    <Property Name="Region" Type="Edm.String" Nullable="false"/>
+  </ComplexType>
+  <ComplexType Name="Location" OpenType="true">
+    <Property Name="Address" Type="Edm.String" Nullable="false"/>
+    <Property Name="City" Type="Microsoft.OData.SampleService.Models.TripPin.City" Nullable="false"/>
+  </ComplexType>
+  ...
+```
+
+So record style annotation types are defined with the `<ComplexType>` element, and this `DeleteRestrictionsType` [looks like this](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.xml#L791-L827) (to keep it brief, only a few properties are shown here):
+
+```
+<ComplexType Name="DeleteRestrictionsType">
+  <Property Name="Deletable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
+    <Annotation Term="Core.Description" String="Entities can be deleted" />
+  </Property>
+  <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
+    <Annotation Term="Core.Description" String="These navigation properties do not allow DeleteLink requests" />
+  </Property>
+  <Property Name="MaxLevels" Type="Edm.Int32" Nullable="false" DefaultValue="-1">
+    <Annotation Term="Core.Description" String="The maximum number of navigation properties that can be traversed when addressing the collection to delete from or the entity to delete. A value of -1 indicates there is no restriction." />
+  </Property>
+</ComplexType>
+```
+
+Where have we seen this term in use before? In the EDMX generated from the `@readonly` annotation [in service.cds](#in-servicecds). Here's the relevant exerpt from the XML we saw earlier:
+
+```xml
+<Annotations Target="Stats.EntityContainer/OrderInfo">
+  <Annotation Term="Capabilities.DeleteRestrictions">
+    <Record Type="Capabilities.DeleteRestrictionsType">
+      <PropertyValue Property="Deletable" Bool="false"/>
+    </Record>
+  </Annotation>
+  ...
+</Annotations>
+```
+
+Having meditated a little on how these terms and types are defined, we can more comfortably approach the EDMX annotation content and pick out what's what. In this excerpt, we can now understand:
+
+- the annotation is targeting the `OrderInfo` entity set due to the value of the `Target` attribute in the container `<Annotations>` element
+- the type of the annotation itself is a record, which means there's no primitive value conveyed as an attribute in the `<Annotation>` element
+- instead, the `<Annotation>` element contains a child `<Record>` element
+- that `<Record>` element is described by the type `Capabilities.DeleteRestrictionsType`
+- it contains a single property / value pair, in the form of a `<PropertyValue>` element; attributes in this element convey the property (`Deletable`) and the corresponding value (`false`)
+
+Indeed, the content of the `<PropertyValue>` element here makes sense to us now, because we've seen the appropriate definition in the `<ComplexType>` where the `DeleteRestrictionsType` is defined:
+
+```xml
+<Property Name="Deletable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
+  <Annotation Term="Core.Description" String="Entities can be deleted" />
+</Property>
+```
+
+Remember that the CDS annotation used, `@readonly`, is basically expanded into the appropriate terms. There's a [section in the CAP documentation on Adding Fiori apps to projects](https://cap.cloud.sap/docs/advanced/fiori#prefer-readonly-mandatory-) that shows us what the actual equivalent of this shorthand `@readonly` annotation is:
+
+```cds
+entity Categories @(Capabilities:{
+  InsertRestrictions.Insertable: false,
+  UpdateRestrictions.Updatable: false,
+  DeleteRestrictions.Deletable: false
+}) {
+  ...
+}
+```
+
+(The other annotations here are also generated in the EDMX, but we've just focused on the `Capabilities.DeleteRestrictions` term for now.
+
+We're getting closer to being fully comfortable with the CDS annotation constructs [in index.cds](#in-indexcds). And in fact here we can see something that links where we are on the journey with what we saw back there. And that is the way that the actual `Capabilities` terms, along with the values for the properties of the corresponding records, are expressed.
+
+Consider that, in the context of a term that is described by a record type, we have three levels:
+
+- Vocabulary
+- Term
+- Property (via Type)
+
+In the `Capabilities` vocabulary, the `DeleteRestrictions` term is described by the `DeleteRestrictionsType` type, which contains a number of properties, one of which is `Deletable`. This property is written in CDS annotation terms in a dotted notation, followed by a colon, and then the value
+
+```
+Capabilities.DeleteRestrictions.Deletable: false
+```
