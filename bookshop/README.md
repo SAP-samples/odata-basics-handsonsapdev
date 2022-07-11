@@ -330,8 +330,6 @@ Wait, what? Is the `Core.description` term itself annotated ... with the `Core.d
 
 Let's annotate the `Categories` entity type with this term (there are different ways to add annotations in CDS - refer to [the CAP annotation syntax](https://cap.cloud.sap/docs/cds/cdl#annotation-syntax) for more information):
 
-```cds
-
 This results in:
 
 ```xml
