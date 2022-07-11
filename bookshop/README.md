@@ -958,3 +958,393 @@ In other words, the curly braces here are part of the syntax for specifying a mo
 But the values for the `Title` and `Description` properties of the `HeaderInfoType` type are not strings, but records. Complex types, in other words, via our friend `DataFieldAbstract`. The description of these two properties in the [HeaderInfoType reference](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) states: "_This can be a DataField and any of its children, or a DataFieldForAnnotation targeting ConnectedFields._". And just like before, the concrete type used here is `DataField`, with a `Value` property.
 
 In other words, the curly braces in these two properties denote the `DataField` type's record structure that contains the `Value` property.
+
+### Examining the OData annotations in EDMX
+
+With all this knowledge under your belt, the last thing to do in this journey of discovery is to revisit the OData service's metadata document (for `CatalogService`, rather than `Stats`) and stare at the EDMX, in particular, the annotation related XML. It should now be somewhat clearer, and hopefully you'll be able to read it more comfortably and with more confidence.
+
+You should also more easily recognise the names of the XML elements in use, as they directly represent concepts we've looked at: `Collection`, `Record`, `PropertyValue`, and so on.
+
+Assuming the service is [still running](#getting-things-running), open up <http://localhost:4004/catalog/$metadata>, take a deep breath, and dive in. The actual document content is at the end. Here are some reading notes on it.
+
+#### Namespace references
+
+At the top we see references to the namespaces corresponding to the annotation vocabularies used:
+
+```xml
+<edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+  <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+</edmx:Reference>
+<edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+  <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+</edmx:Reference>
+<edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+  <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+</edmx:Reference>
+```
+
+#### Annotation targets
+
+The annotations themselves appear within the `<Schema>` element, within multiple `<Annotations>` elements. There are multiple elements because it's at this `<Annotations>` element level that the target of the annotation(s) is specified, and there are multiple annotation targets.
+
+Some targets are entity types, such as `Books`:
+
+```xml
+<Annotations Target="CatalogService.Books">
+  ...
+</Annotations>
+```
+
+and `Countries`:
+
+```xml
+<Annotations Target="CatalogService.Countries">
+  ...
+</Annotations>
+```
+
+Other targets are properties, such as the `ID` property in `Books`:
+
+```xml
+<Annotations Target="CatalogService.Books/ID">
+  ...
+</Annotations>
+```
+
+#### UI.Identification annotation
+
+The annotation XML for this, applied to the `Books` entity set target, is as follows:
+
+```xml
+<Annotation Term="UI.Identification">
+  <Collection>
+    <Record Type="UI.DataField">
+      <PropertyValue Property="Value" Path="title"/>
+    </Record>
+  </Collection>
+</Annotation>
+```
+
+#### UI.SelectionFields annotation
+
+The annotation XML for this, applied to the `Books` entity set target, is as follows:
+
+```xml
+<Annotation Term="UI.SelectionFields">
+  <Collection>
+    <PropertyPath>title</PropertyPath>
+  </Collection>
+</Annotation>
+```
+
+#### UI.LineItem annotation
+
+The annotation XML for this, applied to the `Books` entity set target, is as follows:
+
+```xml
+<Annotation Term="UI.LineItem">
+  <Collection>
+    <Record Type="UI.DataField">
+      <PropertyValue Property="Value" Path="ID"/>
+    </Record>
+    <Record Type="UI.DataField">
+      <PropertyValue Property="Value" Path="title"/>
+    </Record>
+    <Record Type="UI.DataField">
+      <PropertyValue Property="Value" Path="author/name"/>
+    </Record>
+    <Record Type="UI.DataField">
+      <PropertyValue Property="Value" Path="author_ID"/>
+    </Record>
+    <Record Type="UI.DataField">
+      <PropertyValue Property="Value" Path="stock"/>
+    </Record>
+  </Collection>
+</Annotation>
+```
+
+Note that this XML is slighly larger as there are multiple records in the collection
+
+#### UI.HeaderInfo annotation
+
+The annotation XML for this, applied to the `Books` entity set target, is as follows:
+
+```xml
+<Annotation Term="UI.HeaderInfo">
+  <Record Type="UI.HeaderInfoType">
+    <PropertyValue Property="TypeName" String="Book"/>
+    <PropertyValue Property="TypeNamePlural" String="Books"/>
+    <PropertyValue Property="Title">
+      <Record Type="UI.DataField">
+        <PropertyValue Property="Value" Path="title"/>
+      </Record>
+    </PropertyValue>
+    <PropertyValue Property="Description">
+      <Record Type="UI.DataField">
+        <PropertyValue Property="Value" Path="author/name"/>
+      </Record>
+    </PropertyValue>
+  </Record>
+</Annotation>
+```
+
+Here we can more plainly see the intermix of primitive values for `TypeName` and `TypeNamePlural` and records (complex types) for `Title` and `Description`.
+
+#### The CatalogService's metadata
+
+Here's the entire document, in all its glory.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="CatalogService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Books" EntityType="CatalogService.Books">
+          <NavigationPropertyBinding Path="author" Target="Authors"/>
+        </EntitySet>
+        <EntitySet Name="Authors" EntityType="CatalogService.Authors">
+          <NavigationPropertyBinding Path="books" Target="Books"/>
+        </EntitySet>
+        <EntitySet Name="Orders" EntityType="CatalogService.Orders">
+          <NavigationPropertyBinding Path="book" Target="Books"/>
+          <NavigationPropertyBinding Path="country" Target="Countries"/>
+        </EntitySet>
+        <EntitySet Name="Countries" EntityType="CatalogService.Countries">
+          <NavigationPropertyBinding Path="texts" Target="Countries_texts"/>
+          <NavigationPropertyBinding Path="localized" Target="Countries_texts"/>
+        </EntitySet>
+        <EntitySet Name="Countries_texts" EntityType="CatalogService.Countries_texts"/>
+      </EntityContainer>
+      <EntityType Name="Books">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="title" Type="Edm.String"/>
+        <Property Name="stock" Type="Edm.Int32"/>
+        <NavigationProperty Name="author" Type="CatalogService.Authors" Partner="books">
+          <ReferentialConstraint Property="author_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="author_ID" Type="Edm.Int32"/>
+      </EntityType>
+      <EntityType Name="Authors">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="name" Type="Edm.String"/>
+        <NavigationProperty Name="books" Type="Collection(CatalogService.Books)" Partner="author"/>
+      </EntityType>
+      <EntityType Name="Orders">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="book" Type="CatalogService.Books">
+          <ReferentialConstraint Property="book_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="book_ID" Type="Edm.Int32"/>
+        <Property Name="quantity" Type="Edm.Int32"/>
+        <NavigationProperty Name="country" Type="CatalogService.Countries">
+          <ReferentialConstraint Property="country_code" ReferencedProperty="code"/>
+        </NavigationProperty>
+        <Property Name="country_code" Type="Edm.String" MaxLength="3"/>
+      </EntityType>
+      <EntityType Name="Countries">
+        <Key>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <NavigationProperty Name="texts" Type="Collection(CatalogService.Countries_texts)">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="localized" Type="CatalogService.Countries_texts">
+          <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Countries_texts">
+        <Key>
+          <PropertyRef Name="locale"/>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+      </EntityType>
+      <Annotations Target="CatalogService.Books">
+        <Annotation Term="UI.Identification">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="title"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.SelectionFields">
+          <Collection>
+            <PropertyPath>title</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="ID"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="title"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="author/name"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="author_ID"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="stock"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.HeaderInfo">
+          <Record Type="UI.HeaderInfoType">
+            <PropertyValue Property="TypeName" String="Book"/>
+            <PropertyValue Property="TypeNamePlural" String="Books"/>
+            <PropertyValue Property="Title">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="title"/>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="Description">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="author/name"/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="CatalogService.Books/ID">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="Common.Label" String="ID"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Books/title">
+        <Annotation Term="Common.Label" String="Title"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Books/stock">
+        <Annotation Term="Common.Label" String="Stock"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Books/author">
+        <Annotation Term="Common.Label" String="AuthorID"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Books/author_ID">
+        <Annotation Term="Common.Label" String="AuthorID"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Authors/ID">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="Common.Label" String="ID"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Authors/name">
+        <Annotation Term="Common.Label" String="AuthorName"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Orders/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Orders/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Orders/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Orders/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Orders/country">
+        <Annotation Term="Common.Label" String="Country"/>
+        <Annotation Term="Core.Description" String="Country code as specified by ISO 3166-1"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Orders/country_code">
+        <Annotation Term="Common.Label" String="Country"/>
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="Label" String="Country"/>
+            <PropertyValue Property="CollectionPath" String="Countries"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="country_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterDisplayOnly">
+                  <PropertyValue Property="ValueListProperty" String="name"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Core.Description" String="Country code as specified by ISO 3166-1"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Countries">
+        <Annotation Term="UI.Identification">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="CatalogService.Countries/name">
+        <Annotation Term="Common.Label" String="Name"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Countries/descr">
+        <Annotation Term="Common.Label" String="Description"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Countries/code">
+        <Annotation Term="Common.Text" Path="name"/>
+        <Annotation Term="Common.Label" String="Country Code"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Countries_texts/name">
+        <Annotation Term="Common.Label" String="Name"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Countries_texts/descr">
+        <Annotation Term="Common.Label" String="Description"/>
+      </Annotations>
+      <Annotations Target="CatalogService.Countries_texts/code">
+        <Annotation Term="Common.Text" Path="name"/>
+        <Annotation Term="Common.Label" String="Country Code"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+```
+
+#### Further annotations
+
+There are some annotations in the EDMX that we've not mentioned here. But you should be able to work out what they are, where they came from, and understand what they are for. That is a task for you to complete on your own. A clue here is that they relate to built-in CAP features relating to [Common Types & Aspects](https://cap.cloud.sap/docs/cds/common).
+
+Good luck, and happy annotating!
