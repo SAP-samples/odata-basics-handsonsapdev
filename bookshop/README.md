@@ -890,11 +890,15 @@ because the type is a *Collection* of complex types (records), not a single comp
 
 Anyway, what's being expressed here is that the entity type is to be "identified" by the `title` property (of the `Books` entity type).
 
+You can see [the EDMX result of this annotation in the corresponding XML in the service's metadata document](#uiidentification-annotation).
+
 #### The UI.LineItem term
 
 The `LineItem` term is very similar, except that there is more than one record given as the value. Again, the type of the term is `[DataFieldAbstract]`, and what's being used is a collection of concrete `DataField` instances, with a value specified for their `Value` property. These values that are specified (`ID`, `title`, and so on) are properties in the model.
 
 Note in passing that one of these model properties (`author.name`) is via the `Books` entity type relationship with the `Authors` entity type, and another (author_ID) is a generated property from the use of the managed association to create that relationship.
+
+You can see [the EDMX result of this annotation in the corresponding XML in the service's metadata document](#uiselectionfields-annotation).
 
 #### The UI.SelectionFields term
 
@@ -914,6 +918,8 @@ annotate CatalogService.Books with @(
     UI.SelectionFields: [ title ]
 );
 ```
+
+You can see [the EDMX result of this annotation in the corresponding XML in the service's metadata document](#uiselectionfields-annotation).
 
 #### The UI.HeaderInfo term
 
@@ -958,6 +964,8 @@ In other words, the curly braces here are part of the syntax for specifying a mo
 But the values for the `Title` and `Description` properties of the `HeaderInfoType` type are not strings, but records. Complex types, in other words, via our friend `DataFieldAbstract`. The description of these two properties in the [HeaderInfoType reference](https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/UI.md#HeaderInfoType) states: "_This can be a DataField and any of its children, or a DataFieldForAnnotation targeting ConnectedFields._". And just like before, the concrete type used here is `DataField`, with a `Value` property.
 
 In other words, the curly braces in these two properties denote the `DataField` type's record structure that contains the `Value` property.
+
+You can see [the EDMX result of this annotation in the corresponding XML in the service's metadata document](#uiheaderinfo-annotation).
 
 ### Examining the OData annotations in EDMX
 
