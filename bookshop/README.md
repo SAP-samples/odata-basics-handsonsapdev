@@ -913,6 +913,7 @@ but the annotation itself could be also be compressed like this:
 annotate CatalogService.Books with @(
     UI.SelectionFields: [ title ]
 );
+```
 
 #### The UI.HeaderInfo term
 
@@ -931,7 +932,7 @@ annotate CatalogService.Books with @(
 );
 ```
 
-While not so much compressed, this could have equally expressed as follows:
+While not so much compressed, this could have equally been expressed as follows:
 
 ```cds
 annotate CatalogService.Books with @(
