@@ -1,7 +1,5 @@
 # Exploring annotations
 
-> ⚠ This document is a work-in-progress
-
 This document is an exploration of annotations, in CDS and in OData, and how they work together.
 
 To accompany the document, we'll use a simple app. The specific app we'll use is the one that is built over the series of exercises in the (now archived) [repo for the SAP CodeJam on CAP with Node.js](https://github.com/SAP-archive/cloud-cap-nodejs-codejam). It is included in this repo as it is a good illustration of some basic annotations. In particular, we will examine the annotations in the [index.cds](srv/index.cds) and [service.cds](srv/service.cds) files in the [srv/](srv/) directory.
