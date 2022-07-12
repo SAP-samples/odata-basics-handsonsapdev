@@ -1,12 +1,14 @@
-# Sample app demonstrating some OData annotations
+# Exploring annotations
 
 > ⚠ This document is a work-in-progress
 
-This is the complete app that is built over the series of exercises in the (now archived) [repo for the SAP CodeJam on CAP with Node.js](https://github.com/SAP-archive/cloud-cap-nodejs-codejam). It is included in this repo as it is a good illustration of some basic annotations. In particular, have a look at the annotations in the [index.cds](srv/index.cds) and [service.cds](srv/service.cds) files in the [srv/](srv/) directory.
+This document is an exploration of annotations, in CDS and in OData, and how they work together.
+
+To accompany the document, we'll use a simple app. The specific app we'll use is the one that is built over the series of exercises in the (now archived) [repo for the SAP CodeJam on CAP with Node.js](https://github.com/SAP-archive/cloud-cap-nodejs-codejam). It is included in this repo as it is a good illustration of some basic annotations. In particular, we will examine the annotations in the [index.cds](srv/index.cds) and [service.cds](srv/service.cds) files in the [srv/](srv/) directory.
 
 ## Getting things running
 
-Move to this directory and start things up, like this:
+Move to this directory and start up the app (and the corresponding backend services), like this:
 
 ```bash
 cd workingapp
@@ -15,7 +17,21 @@ cds run
 
 ## The annotations
 
-Here's a brief overview of the annotations used in the service which is part of this app. Note that the word "annotation" is used in two different contexts here:
+This section is fairly long, and is a journey through annotations in the service layer of the CAP application in this directory. There are the following sections:
+
+We start here with a brief introduction to annotations in CAP and CDS.
+
+Then we look at a singular annotation [in service.cds](#in-servicecds).
+
+After that, we take a look at a more complex set of annotations [in index.cds](#in-indexcds), with an exploration of [OData annotation vocabularies](#odata-annotation-vocabularies) in general, a specific look at one particular vocabulary ([the UI annotation vocabulary](#the-ui-annotation-vocabulary), a brief overview of the [syntax for annotations in CDS](#syntax-for-annotations-in-cds), a deep dive into [annotation values](#annotation-values) (primitives, collections and records), how to [express multiple annotations in CDS](#expressing-multiple-annotations-with-), rounding off this branch of exploration with an examination of [annotation vocabulary references](#annotation-vocabulary-references). 
+
+After that exploration of theory, we're ready for [interpreting the annotation details](#interpreting-the-detailed-annotations), wherein we [look at the DataFieldAbstract type](#looking-at-the-datafieldabstract-type), the [UI.Identification term](#the-uiidentification-term), [the UI.LineItem term](#the-uilineitem-term), [the UI.SelectionFields term](##the-uiselectionfields-term) and [the UI.HeaderInfo term](#the-uiheaderinfo-term), all of which are used in the annotations in `index.cds`. 
+
+Finally, we turn to the OData metadata document, and take some time [examining the OData annotations in EDMX](#examining-the-odata-annotations-in-edmx), paying close attention to [namespace references](#namespace-references) and then [annotation targets](#annotation-targets), before moving on to look at the actual EDMX generated for the annotations used - the [UI.Identification annotation](#uiidentification-annotation), the [UI.SelectionFields annotation](#uiselectionfields-annotation), the [UI.LineItem annotation](#uilineitem-annotation) and the [UI.HeaderInfo annotation](#uiheaderinfo-annotation). To put everything into context, [the CatalogService's metadata](#the-catalogservices-metadata) is shown in its entirety.
+
+
+
+Here's a brief overview of the annotations used in the service layer, which is part of this app. Note that the word "annotation" is used in two different contexts here:
 
 - [Annotations in CAP](https://cap.cloud.sap/docs/cds/annotations) in CDS form are used to describe and augment core data service definitions, and are prefixed with the `@` symbol
 - [OData annotations](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html), organised into [vocabularies](https://github.com/oasis-tcs/odata-vocabularies), that provide extra information on an OData service's metadata and appear in the EDMX definition (in the `$metadata` document)
