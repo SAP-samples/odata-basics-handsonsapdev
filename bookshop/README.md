@@ -914,7 +914,7 @@ Note in passing that one of these model properties (`author.name`) is via the `B
 
 You can see [the EDMX result of this annotation in the corresponding XML in the service's metadata document](#uiselectionfields-annotation).
 
-The Fiori preview shows us an example of how this annotation is used, to determine the columns in the list of books:
+The [Fiori preview app](http://localhost:4004/$fiori-preview/CatalogService/Books#preview-app) shows us an example of how this annotation is used, to determine the columns in the list of books:
 
 ![Fiori preview - list of books, with the effect of the UI.LineItem annotation highlighted](media/UI.LineItem.png)
 
@@ -939,7 +939,7 @@ annotate CatalogService.Books with @(
 
 You can see [the EDMX result of this annotation in the corresponding XML in the service's metadata document](#uiselectionfields-annotation).
 
-The Fiori preview shows us an example of how this annotation is used, to determine which field(s) are exposed to allow filtering of books in the list:
+The [Fiori preview app](http://localhost:4004/$fiori-preview/CatalogService/Books#preview-app) shows us an example of how this annotation is used, to determine which field(s) are exposed to allow filtering of books in the list:
 
 ![Fiori preview - list of books, with the effect of the UI.SelectionFields annotation highlighted](media/UI.SelectionFields.png)
 
@@ -989,7 +989,7 @@ In other words, the curly braces in these two properties denote the `DataField` 
 
 You can see [the EDMX result of this annotation in the corresponding XML in the service's metadata document](#uiheaderinfo-annotation).
 
-The Fiori preview shows us an example of how this annotation is used, in two places: the plural of "Books" used in the list, and the singular "Book" used, plus the book title and author name for the header section of the detail page for a selected book:
+The [Fiori preview app](http://localhost:4004/$fiori-preview/CatalogService/Books#preview-app) shows us an example of how this annotation is used, in two places: the plural of "Books" used in the list, and the singular "Book" used, plus the book title and author name for the header section of the detail page for a selected book:
 
 ![Fiori preview - list of books, with the effect of the UI.HeaderInfo annotation highlighted](media/UI.HeaderInfo-List.png)
 
