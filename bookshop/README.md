@@ -340,7 +340,7 @@ For a brief look down the rabbit hole, take a look at the definitive description
 </Term>
 ```
 
-Wait, what? Is the `Core.description` term itself annotated ... with the `Core.description` term? Yes. But let's pull ourselves back from the hole and continue with this example and our sanity.
+Wait, what? Is the `Core.description` term itself annotated ... with the `Core.description` term? Yes. But let's pull ourselves back from the hole and continue with this example and our sanity (although if, like me, you do like to dive in, and are wondering how to annotate annotations in CDS, there's a section in the CAP documentation that covers that: [Annotating annotations](https://cap.cloud.sap/docs/advanced/odata#annotating-annotations)).
 
 Let's annotate the `Categories` entity type with this term (there are different ways to add annotations in CDS - refer to [the CAP annotation syntax](https://cap.cloud.sap/docs/cds/cdl#annotation-syntax) for more information):
 
