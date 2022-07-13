@@ -851,6 +851,8 @@ There's only a single `Property` defined (which is `Value`), with the rest comin
 
 > If you're wondering why the type is `DataFieldAbstract` and not `DataField`, see this [question and answer](https://github.com/SAP/odata-vocabularies/issues/190).
 
+> The [Records section on the CAP documentation on OData annotations](https://cap.cloud.sap/docs/advanced/odata#records) highlights this `DataFieldAbstract` type, pointing out its prominence and the behaviour of the compiler for annotations defined with terms that have this type; the generated EDMX will default to the concrete `DataField` type (i.e. `<Record Type="UI.DataField">...</Record>`) unless another is specified explicitly via the special `$Type` property.
+
 #### The UI.Identification term
 
 Now we know about the `DataFieldAbstract` type and its concrete derivation `DataField` that's being used here, we can more comfortably interpret the appearance of the two terms in the CDS annotations:
