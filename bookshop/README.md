@@ -331,7 +331,7 @@ Note that there are no annotations in this EDMX yet.
 
 The [Core vocabulary](http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html#_Toc472083029) contains a number of primitive terms, one of which is [Description](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md#Description). This has the type `String` and itself is described as "A brief description of a model element".
 
-For a brief look down the rabbit hole, take a look at the definitive description of the Core vocabulary terms, in [Org.OData.Core.V1.xml](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml), where the Core terms are defined, including [this one](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml#L105-L108):
+For a brief look [down the rabbit hole](https://www.youtube.com/clip/Ugkxr9MWdf0L1yfr5Rlv-LwIo44YQol4DUgY), take a look at the definitive description of the Core vocabulary terms, in [Org.OData.Core.V1.xml](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml), where the Core terms are defined, including [this one](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.xml#L105-L108):
 
 ```xml
 <Term Name="Description" Type="Edm.String">
